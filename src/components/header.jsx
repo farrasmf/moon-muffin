@@ -7,11 +7,11 @@ export default function Header() {
             </svg>
 
             <div className="flex gap-4">
-                <button className="bg-transparent border-2 border-[#828A77] px-4 py-2 rounded-4xl font-semibold text-[#046511]">
+                <button className="bg-transparent border-2 border-[#828A77] px-4 py-2 rounded-3xl font-semibold text-[#046511]">
                     AR Experience
                 </button>
 
-                <button className="bg-[#92ED00] px-4 py-2 rounded-4xl font-semibold text-[#046511]">
+                <button className="bg-[#92ED00] px-4 py-2 rounded-3xl font-semibold text-[#046511]">
                     Pesan Sekarang! 
                 </button>
             </div>
