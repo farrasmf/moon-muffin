@@ -24,7 +24,7 @@ export default function ARExperience() {
       <div className="flex h-screen w-full">
         {/* Kiri - Record Video */}
         <div className="flex flex-1 flex-col items-center justify-center bg-[#EDF0E7]">
-          <img src="/record-video.png" alt="Record Video" className="w-100 h-100" />
+          <img src="/assets/images/record-video.png" alt="Record Video" className="w-100 h-100" />
           <Link href="/orderer">
           <button className="mt-4 bg-lime-400 text-[#046511] px-6 py-2 rounded-full text-lg font-semibold">
             Record Video
@@ -34,7 +34,7 @@ export default function ARExperience() {
         
         {/* Kanan - Scan AR */}
         <div className="flex flex-1 flex-col items-center justify-center" style={{ backgroundColor: bgColorScan }}>
-          <img src="/scan-ar.png" alt="Scan AR" className="w-100 h-100" />
+          <img src="/assets/images/scan-ar.png" alt="Scan AR" className="w-100 h-100" />
           <button className="mt-4 bg-white text-[#046511] px-6 py-2 rounded-full text-lg font-semibold border">
             Scan AR
           </button>

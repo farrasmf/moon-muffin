@@ -37,7 +37,7 @@ export default function InputOrderID() {
         </div>
         {/* Tombol Submit */}
         <button onClick={handleSubmit} className="bg-lime-400 text-white p-3 rounded-full hover:bg-lime-500 transition">
-          <Image src="/icons/arrow-forward.svg" alt="Arrow" width={24} height={24} />
+          <Image src="/assets/icons/arrow-right-icon.svg" alt="Arrow" width={24} height={24} />
         </button>
       </div>
     </div>
