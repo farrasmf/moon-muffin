@@ -1,4 +1,4 @@
-import InputOrderID from "@/components/InputOrderID";
+import InputOrderID from "@/components/inputOrderID";
 
 export default function OrderPage() {
   return (
