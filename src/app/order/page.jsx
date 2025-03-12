@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import CustomFileInput from "@/components/customFileInput";
 
 function Pesanan({ nomor, handleRemove, handleTHRChange, selectedTHR }) {
   return (
@@ -11,32 +10,32 @@ function Pesanan({ nomor, handleRemove, handleTHRChange, selectedTHR }) {
         <label className="text-xl text-green-700" htmlFor={`jumlahItem-${nomor}`}>
           Jumlah Item
         </label>
-        <input className="w-full bg-white border-2 border-[#C9CDC2] rounded-xl p-4 text-xl" type="number" id={`jumlahItem-${nomor}`} name={`jumlahItem-${nomor}`} placeholder="Masukan jumlah item" required />
+        <input className="w-full max-w-full bg-white border-2 border-[#C9CDC2] rounded-xl p-4 text-xl" type="number" id={`jumlahItem-${nomor}`} name={`jumlahItem-${nomor}`} placeholder="Masukan jumlah item" required />
       </div>
       <div className="flex flex-col gap-2 mb-6">
         <label className="text-xl text-green-700" htmlFor={`alamat-${nomor}`}>
           Alamat Pengiriman
         </label>
-        <input className="w-full bg-white border-2 border-[#C9CDC2] rounded-xl p-4 text-xl" type="text" id={`alamat-${nomor}`} name={`alamat-${nomor}`} placeholder="Masukan alamat pengiriman" required />
+        <input className="w-full max-w-full bg-white border-2 border-[#C9CDC2] rounded-xl p-4 text-xl" type="text" id={`alamat-${nomor}`} name={`alamat-${nomor}`} placeholder="Masukan alamat pengiriman" required />
       </div>
       <div className="flex flex-col gap-2 mb-6">
         <label className="text-xl text-green-700" htmlFor={`kota-${nomor}`}>
           Kota
         </label>
-        <input className="w-full bg-white border-2 border-[#C9CDC2] rounded-xl p-4 text-xl" type="text" id={`kota-${nomor}`} name={`kota-${nomor}`} placeholder="Masukan kota" required />
+        <input className="w-full max-w-full bg-white border-2 border-[#C9CDC2] rounded-xl p-4 text-xl" type="text" id={`kota-${nomor}`} name={`kota-${nomor}`} placeholder="Masukan kota" required />
       </div>
       <div className="flex gap-4 mb-6">
         <div className="flex flex-col gap-2 w-1/2">
           <label className="text-xl text-green-700" htmlFor={`provinsi-${nomor}`}>
             Provinsi
           </label>
-          <input className="w-full bg-white border-2 border-[#C9CDC2] rounded-xl p-4 text-xl" type="text" id={`provinsi-${nomor}`} name={`provinsi-${nomor}`} placeholder="Masukan provinsi" required />
+          <input className="w-full max-w-full bg-white border-2 border-[#C9CDC2] rounded-xl p-4 text-xl" type="text" id={`provinsi-${nomor}`} name={`provinsi-${nomor}`} placeholder="Masukan provinsi" required />
         </div>
         <div className="flex flex-col gap-2 w-1/2">
           <label className="text-xl text-green-700" htmlFor={`kodePos-${nomor}`}>
             Kode Pos
           </label>
-          <input className="w-full bg-white border-2 border-[#C9CDC2] rounded-xl p-4 text-xl" type="text" id={`kodePos-${nomor}`} name={`kodePos-${nomor}`} placeholder="Masukan kode pos" required />
+          <input className="w-full max-w-full bg-white border-2 border-[#C9CDC2] rounded-xl p-4 text-xl" type="text" id={`kodePos-${nomor}`} name={`kodePos-${nomor}`} placeholder="Masukan kode pos" required />
         </div>
       </div>
       <div className="flex flex-col gap-2 mb-6">
@@ -79,7 +78,7 @@ export default function OrderPage() {
 
   return (
     <div className="min-h-screen bg-[#EDF0E7]">
-      <div className="px-40 py-24">
+      <div className="md:px-40 sm:px-8 px-4 py-24">
         <div className="w-full relative flex justify-center items-center">
           <h1 className="text-5xl md:text-5xl font-medium text-green-700">Pesan sekarang, jangan cuma wacana</h1>
 
@@ -88,27 +87,27 @@ export default function OrderPage() {
           </div>
         </div>
 
-        <div className="w-full mt-24 px-56">
+        <div className="w-full mt-24 px-4 sm:px-8 md:px-56">
           <form action="">
             <div className="flex flex-col gap-2 mb-6">
               <label className="text-xl text-green-700" htmlFor="name">
                 Nama
               </label>
-              <input className="w-full bg-white border-2 border-[#C9CDC2] rounded-xl p-4 text-xl" type="text" id="name" name="name" value={""} onChange={""} placeholder="Masukan nama kamu" required />
+              <input className="w-full max-w-full bg-white border-2 border-[#C9CDC2] rounded-xl p-4 text-xl" type="text" id="name" name="name" value={""} onChange={""} placeholder="Masukan nama kamu" required />
             </div>
 
             <div className="flex flex-col gap-2 mb-6">
               <label className="text-xl text-green-700" htmlFor="name">
                 Alamat email
               </label>
-              <input className="w-full bg-white border-2 border-[#C9CDC2] rounded-xl p-4 text-xl" type="email" id="email" name="email" value={""} onChange={""} placeholder="Masukan email kamu" required />
+              <input className="w-full max-w-full bg-white border-2 border-[#C9CDC2] rounded-xl p-4 text-xl" type="email" id="email" name="email" value={""} onChange={""} placeholder="Masukan email kamu" required />
             </div>
 
             <div className="flex flex-col gap-2 mb-6">
               <label className="text-xl text-green-700" htmlFor="whatsapp">
                 Nomor WhatsApp
               </label>
-              <input className="w-full bg-white border-2 border-[#C9CDC2] rounded-xl p-4 text-xl" type="text" id="whatsapp" name="whatsapp" placeholder="Masukan nomor WhatsApp kamu" required />
+              <input className="w-full max-w-full bg-white border-2 border-[#C9CDC2] rounded-xl p-4 text-xl" type="text" id="whatsapp" name="whatsapp" placeholder="Masukan nomor WhatsApp kamu" required />
             </div>
 
             {pesananList.map((nomor) => (
