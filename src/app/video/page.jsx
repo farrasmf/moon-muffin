@@ -1,15 +1,15 @@
 import CustomFileInput from "@/components/customFileInput";
 import SignatureInput from "@/components/SignatureInput";
-
+import VideoModal from "@/components/videoModal";
 export default function OrderPage() {
   return (
     <div className="min-h-screen bg-[#EDF0E7]">
-      <div className="px-40 py-24">
+      <div className="md:px-40 sm:px-8 px-4 py-24">
         <div className="w-full relative flex justify-center items-center">
           <h1 className="text-5xl md:text-5xl font-medium text-green-700">Record video & buat pesan mu!</h1>
         </div>
 
-        <div className="w-full mt-24 px-56">
+        <div className="w-full mt-24 px-4 sm:px-8 md:px-56">
           <form action="">
             {[1, 2].map((nomor) => (
               <div key={nomor} className="border-2 rounded-xl p-4 mb-4 bg-white">
@@ -53,7 +53,7 @@ export default function OrderPage() {
                   </p>
                 </div>
                 <div className="flex flex-col gap-2 mb-6">
-                  <CustomFileInput />
+                  <VideoModal />
                 </div>
                 <div className="flex flex-col gap-2 mb-6">
                   <label className="text-xl text-green-700" htmlFor={`pesan-${nomor}`}>
