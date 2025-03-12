@@ -20,21 +20,25 @@ export default function ARExperience() {
     };
   }, []);
 
-  return (
-    <div className="flex h-screen w-full">
-      {/* Kiri - Record Video */}
-      <div className="flex flex-1 flex-col items-center justify-center bg-[#EDF0E7]">
-        <img src="/assets/images/record-video.png" alt="Record Video" className="w-100 h-100" />
-        <Link href="/orderer">
-          <button className="mt-4 bg-lime-400 text-[#046511] px-6 py-2 rounded-full text-lg font-semibold">Record Video</button>
-        </Link>
+    return (
+      <div className="flex h-screen w-full">
+        {/* Kiri - Record Video */}
+        <div className="flex flex-1 flex-col items-center justify-center bg-[#EDF0E7]">
+          <img src="/assets/images/record-video.png" alt="Record Video" className="w-100 h-100" />
+          <Link href="/login">
+          <button className="mt-4 bg-lime-400 text-[#046511] px-6 py-2 rounded-full text-lg font-semibold">
+            Record Video
+          </button>
+          </Link>
+        </div>
+        
+        {/* Kanan - Scan AR */}
+        <div className="flex flex-1 flex-col items-center justify-center" style={{ backgroundColor: bgColorScan }}>
+          <img src="/assets/images/scan-ar.png" alt="Scan AR" className="w-100 h-100" />
+          <button className="mt-4 bg-white text-[#046511] px-6 py-2 rounded-full text-lg font-semibold border">
+            Scan AR
+          </button>
+        </div>
       </div>
-
-      {/* Kanan - Scan AR */}
-      <div className="flex flex-1 flex-col items-center justify-center" style={{ backgroundColor: bgColorScan }}>
-        <img src="/assets/images/scan-ar.png" alt="Scan AR" className="w-100 h-100" />
-        <button className="mt-4 bg-white text-[#046511] px-6 py-2 rounded-full text-lg font-semibold border">Scan AR</button>
-      </div>
-    </div>
-  );
-}
+    );
+  }
