@@ -106,7 +106,7 @@ export default function Header() {
 
       {/* Desktop Menu */}
       <div className="hidden md:flex gap-4">
-        <Link href="https://link.byc.plus/moonmuffin-ar">
+        <Link href="/experience-app">
           <button className="flex items-center gap-2  bg-[#EDF0E7] border-2 border-[#828A77] px-4 py-2 rounded-full font-medium text-[#046511]">
             Experience App{" "}
             <svg
