@@ -47,9 +47,11 @@ export default function ARExperience() {
           alt="Scan AR"
           className="w-100 h-100"
         />
-        <button className="mt-4 bg-white text-[#046511] px-6 py-2 rounded-full text-lg font-semibold border">
-          Buka Aplikasi AR
-        </button>
+        <Link href="https://moonmuffin-ar.byc.plus">
+          <button className="mt-4 bg-white text-[#046511] px-6 py-2 rounded-full text-lg font-semibold border">
+            Buka Aplikasi AR
+          </button>
+        </Link>
       </div>
     </div>
   );
