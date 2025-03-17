@@ -20,7 +20,11 @@ export default function OrderPage() {
       {/* Title */}
       <h1 className="text-2xl sm:text-3xl font-semibold text-green-700 mb-2 relative px-4">
         Pesan mu
-        <img src="/assets/icons/garis-pesanmu.svg" alt="garis bawah" className="absolute -bottom-1 left-0 w-full" />
+        <img
+          src="/assets/icons/garis-pesanmu.svg"
+          alt="garis bawah"
+          className="absolute -bottom-1 left-0 w-full"
+        />
       </h1>
 
       {/* Container */}
