@@ -23,6 +23,8 @@ export default function OrderPage() {
       {
         nomor: 1,
         jumlahItem: "",
+        namaPenerima: "",
+        whatsappPenerima: "",
         kodePos: "",
         provinsi: "",
         provinceCode: "",
@@ -75,6 +77,8 @@ export default function OrderPage() {
         {
           nomor: newNomor,
           jumlahItem: "",
+          namaPenerima: "",
+          whatsappPenerima: "",
           kodePos: "",
           provinsi: "",
           provinceCode: "",
