@@ -83,7 +83,7 @@ export default function Header() {
             </button>
           </Link>
 
-          <Link href={"/order"} onClick={() => setIsMenuOpen(false)}>
+          <Link href={"/create-order"} onClick={() => setIsMenuOpen(false)}>
             <button className="bg-[#92ED00] flex items-center text-[3svh] gap-1 px-[4svh] py-2 rounded-full font-medium text-[#046511]">
               Pesan Sekarang!
               <svg
