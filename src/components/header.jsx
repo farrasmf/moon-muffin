@@ -125,7 +125,7 @@ export default function Header() {
           </button>
         </Link>
 
-        <Link href={"/order"}>
+        <Link href={"/create-order"}>
           <button className="bg-[#92ED00] flex items-center  gap-1 px-4 py-2 rounded-full font-medium text-[#046511]">
             Pesan Sekarang!
             <svg
