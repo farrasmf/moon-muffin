@@ -2,7 +2,6 @@
 
 import SignatureInput from "@/components/SignatureInput";
 import RecordVideoModal from "@/components/RecordVideoModal";
-import Polaroid from "@/components/Polaroid";
 import Message from "@/components/Message";
 import { useState, useRef } from "react";
 

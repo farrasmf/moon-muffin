@@ -1,4 +1,3 @@
-import CustomFileInput from "@/components/customFileInput";
 import SignatureInput from "@/components/SignatureInput";
 import VideoModal from "@/components/videoModal";
 export default function OrderPage() {
