@@ -1,6 +1,6 @@
 "use client";
 
-import Polaroid from "@/components/Polaroid";
+import PhotoPolaroid from "@/components/PhotoPolaroid";
 import PreviewModal from "@/components/PreviewModal";
 import { useState } from "react";
 
@@ -31,7 +31,10 @@ export default function OrderPage() {
       <div className="mt-8 flex flex-col sm:flex-row items-center sm:items-start space-y-6 sm:space-y-0 sm:space-x-6 justify-start w-full px-4 sm:pl-6">
         {/* Foto Card */}
         <div onClick={handleOpenPreview} className="cursor-pointer">
-          <Polaroid imageURL="/assets/images/dummy-person-1.png" name="Dina" />
+          <PhotoPolaroid
+            imageURL="/assets/images/dummy-person-1.png"
+            name="Dina"
+          />
         </div>
 
         {/* Kotak Tambah Video */}

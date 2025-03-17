@@ -1,6 +1,6 @@
 "use client";
 
-import Polaroid from "@/components/Polaroid";
+import PhotoPolaroid from "@/components/PhotoPolaroid";
 import Image from "next/image";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay } from "swiper/modules";
@@ -65,7 +65,13 @@ export default function Home() {
       </div>
 
       <div className="flex justify-center">
-        <Image src={"/assets/images/muffin-placeholder.png"} priority width={1200} height={1000} alt="image" />
+        <Image
+          src={"/assets/images/muffin-placeholder.png"}
+          priority
+          width={1200}
+          height={1000}
+          alt="image"
+        />
       </div>
 
       {/* Carousel Section Start */}
@@ -136,7 +142,7 @@ export default function Home() {
                     }deg)`,
                   }}
                 >
-                  <Polaroid imageURL={item.image} name={item.name} />
+                  <PhotoPolaroid imageURL={item.image} name={item.name} />
                 </div>
               </SwiperSlide>
             ))}
@@ -166,7 +172,7 @@ export default function Home() {
                     }deg)`,
                   }}
                 >
-                  <Polaroid imageURL={item.image} name={item.name} />
+                  <PhotoPolaroid imageURL={item.image} name={item.name} />
                 </div>
               </SwiperSlide>
             ))}
@@ -470,7 +476,11 @@ export default function Home() {
             Made with love by
           </p>
 
-          <img src="/assets/icons/c-plus-logo.svg" className="w-38" alt="icon" />
+          <img
+            src="/assets/icons/c-plus-logo.svg"
+            className="w-38"
+            alt="icon"
+          />
         </div>
       </div>
       {/* Footer End */}
