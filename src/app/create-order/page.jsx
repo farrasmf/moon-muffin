@@ -5,6 +5,7 @@ import CustomerDetails from "@/components/OrderForm/CustomerDetails";
 import AccessoryDetails from "@/components/OrderForm/AccessoryDetails";
 import Pesanan from "@/components/OrderForm/Pesanan";
 import { dummyProvinces } from "@/data/locationData";
+import Link from "next/link";
 
 export default function OrderPage() {
   const [pesananList, setPesananList] = useState([1]);
