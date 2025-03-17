@@ -1,5 +1,5 @@
 import SignatureInput from "@/components/SignatureInput";
-import VideoModal from "@/components/videoModal";
+import VideoModal from "@/components/RecordVideoModal";
 export default function OrderPage() {
   return (
     <div className="min-h-screen bg-[#EDF0E7]">
