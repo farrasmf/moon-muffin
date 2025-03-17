@@ -10,8 +10,11 @@ module.exports = {
     "./src/**/*.{js,ts,jsx,tsx,mdx}",
   ],
   theme: {
-    extend: {},
+    extend: {
+      fontFamily: {
+        otherHand: ["OtherHand", "sans-serif"],
+      },
+    },
   },
   plugins: [],
-}
-
+};

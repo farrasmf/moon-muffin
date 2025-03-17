@@ -1,7 +1,3 @@
-"use client";
-
-import { useState } from "react";
-
 export default function SummaryPage() {
   // Contoh data pesanan
   const pesananList = [

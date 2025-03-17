@@ -7,6 +7,7 @@ import Image from "next/image";
 export default function SignaturePad({ isOpen, onClose, onSave }) {
   const sigCanvas = useRef(null);
   const [imageURL, setImageURL] = useState(null);
+  const [penThickness, setPenThickness] = useState(2.5);
 
   // Fungsi untuk menyimpan tanda tangan
   const saveSignature = () => {
@@ -31,23 +32,9 @@ export default function SignaturePad({ isOpen, onClose, onSave }) {
       <div className="bg-white p-6 rounded-xl shadow-lg max-w-lg w-full">
         <div className="flex justify-between items-center mb-4">
           <h2 className="text-xl font-semibold text-green-700">Tanda Tangan</h2>
-          <button
-            onClick={onClose}
-            className="text-gray-500 hover:text-gray-700"
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              className="h-6 w-6"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M6 18L18 6M6 6l12 12"
-              />
+          <button onClick={onClose} className="text-gray-500 hover:text-gray-700">
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
             </svg>
           </button>
         </div>
@@ -57,6 +44,8 @@ export default function SignaturePad({ isOpen, onClose, onSave }) {
           <SignatureCanvas
             ref={sigCanvas}
             penColor="#046511"
+            minWidth={2.5}
+            maxWidth={3.5}
             canvasProps={{
               className: "w-full bg-white rounded-lg",
               width: 500,
@@ -67,16 +56,10 @@ export default function SignaturePad({ isOpen, onClose, onSave }) {
 
         {/* Tombol kontrol */}
         <div className="flex space-x-2 justify-end">
-          <button
-            onClick={clearSignature}
-            className="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700"
-          >
+          <button onClick={clearSignature} className="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700">
             Hapus
           </button>
-          <button
-            onClick={saveSignature}
-            className="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700"
-          >
+          <button onClick={saveSignature} className="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700">
             Simpan
           </button>
         </div>

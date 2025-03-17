@@ -26,3 +26,24 @@ body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+@font-face {
+  font-family: 'OtherHand';
+  src: url('/fonts/OtherHand.otf') format('opentype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'OtherHand';
+  src: url('/fonts/OtherHand-Medium.otf') format('opentype');
+  font-weight: 500;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'OtherHand';
+  src: url('/fonts/OtherHand-Alt.otf') format('opentype');
+  font-weight: bold;
+  font-style: normal;
+}

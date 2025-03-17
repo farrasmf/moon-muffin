@@ -2,14 +2,15 @@
 
 import { useState } from "react";
 import Image from "next/image";
-import SignaturePad from "./signaturePad";
+import SignaturePad from "./SignaturePad";
 
-export default function SignatureInput() {
+export default function SignatureInput({ onSave }) {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [signatureImage, setSignatureImage] = useState(null);
 
   const handleSaveSignature = (dataUrl) => {
     setSignatureImage(dataUrl);
+    onSave(dataUrl);
   };
 
   return (
