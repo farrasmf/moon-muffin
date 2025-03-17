@@ -704,6 +704,12 @@ function Pesanan({
     setSearchTerms((prev) => ({ ...prev, [field]: value }));
   };
 
+  const getFilteredOptions = (items, field, searchTerm) => {
+    return items.filter((item) =>
+      item.name.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+  };
+
   const toggleDropdown = (field) => {
     setDropdownStates((prev) => {
       // Close all other dropdowns
@@ -717,24 +723,19 @@ function Pesanan({
     });
   };
 
-  const handleClickOutside = (field) => {
-    setDropdownStates((prev) => ({
-      ...prev,
-      [field]: false,
-    }));
-  };
-
-  const getFilteredOptions = (items, field, searchTerm) => {
-    return items.filter((item) =>
-      item.name.toLowerCase().includes(searchTerm.toLowerCase())
-    );
-  };
-
   const handleLocationSelect = (field, value, codeField, code) => {
+    // Close dropdown first to ensure immediate visual feedback
+    setDropdownStates({
+      province: false,
+      regency: false,
+      district: false,
+      village: false,
+    });
+
+    // Then update the values
     handlePesananChange(nomor, field, value);
     handlePesananChange(nomor, codeField, code);
     setSearchTerms((prev) => ({ ...prev, [field]: "" }));
-    handleClickOutside(field);
 
     // Clear dependent fields
     if (field === "provinsi") {
@@ -794,7 +795,7 @@ function Pesanan({
           <input
             type="text"
             className="w-full max-w-full bg-white border-2 border-[#C9CDC2] rounded-xl p-4 md:text-[2.6svh] text-[2.2svh] cursor-pointer"
-            placeholder="Cari provinsi..."
+            placeholder="Pilih provinsi"
             value={pesananData.provinsi || searchTerms.province}
             onChange={(e) => handleSearch("province", e.target.value)}
             onClick={() => toggleDropdown("province")}
@@ -824,11 +825,6 @@ function Pesanan({
             </div>
           )}
         </div>
-        {pesananData.provinsi && (
-          <p className="text-green-700 mt-1">
-            Selected: {pesananData.provinsi}
-          </p>
-        )}
       </div>
 
       {/* Regency/City Selection */}
@@ -847,7 +843,7 @@ function Pesanan({
                 ? "bg-gray-100 border-gray-200 cursor-not-allowed text-gray-400"
                 : "bg-white border-[#C9CDC2] cursor-pointer"
             }`}
-            placeholder="Cari kabupaten/kota..."
+            placeholder="Pilih kabupaten/kota"
             value={pesananData.kota || searchTerms.regency}
             onChange={(e) => handleSearch("regency", e.target.value)}
             onClick={() =>
@@ -880,9 +876,6 @@ function Pesanan({
             </div>
           )}
         </div>
-        {pesananData.kota && (
-          <p className="text-green-700 mt-1">Selected: {pesananData.kota}</p>
-        )}
       </div>
 
       {/* District Selection */}
@@ -901,7 +894,7 @@ function Pesanan({
                 ? "bg-gray-100 border-gray-200 cursor-not-allowed text-gray-400"
                 : "bg-white border-[#C9CDC2] cursor-pointer"
             }`}
-            placeholder="Cari kecamatan..."
+            placeholder="Pilih kecamatan"
             value={pesananData.kecamatan || searchTerms.district}
             onChange={(e) => handleSearch("district", e.target.value)}
             onClick={() =>
@@ -934,11 +927,6 @@ function Pesanan({
             </div>
           )}
         </div>
-        {pesananData.kecamatan && (
-          <p className="text-green-700 mt-1">
-            Selected: {pesananData.kecamatan}
-          </p>
-        )}
       </div>
 
       {/* Village Selection */}
@@ -957,7 +945,7 @@ function Pesanan({
                 ? "bg-gray-100 border-gray-200 cursor-not-allowed text-gray-400"
                 : "bg-white border-[#C9CDC2] cursor-pointer"
             }`}
-            placeholder="Cari kelurahan..."
+            placeholder="Pilih kelurahan"
             value={pesananData.kelurahan || searchTerms.village}
             onChange={(e) => handleSearch("village", e.target.value)}
             onClick={() =>
@@ -993,11 +981,6 @@ function Pesanan({
             </div>
           )}
         </div>
-        {pesananData.kelurahan && (
-          <p className="text-green-700 mt-1">
-            Selected: {pesananData.kelurahan}
-          </p>
-        )}
       </div>
 
       {/* Postal Code */}
@@ -1042,14 +1025,20 @@ function Pesanan({
       {/* THR Section */}
       <div className="flex flex-col gap-1 mb-6">
         <label className="md:text-[2.6svh] text-[2.2svh] text-green-700">
-          Tambah THR
+          Tambah THR (Opsional)
         </label>
         <div className="flex gap-2">
           {[5000, 10000, 20000].map((amount) => (
             <button
               key={amount}
               type="button"
-              onClick={() => handleTHRChange(nomor, amount)}
+              onClick={() => {
+                if (selectedTHR[nomor] === amount) {
+                  handleTHRChange(nomor, null);
+                } else {
+                  handleTHRChange(nomor, amount);
+                }
+              }}
               className={`px-4 py-2 rounded-full ${
                 selectedTHR[nomor] === amount ? "bg-[#C9CDC2]" : "bg-gray-200"
               }`}
@@ -1058,11 +1047,6 @@ function Pesanan({
             </button>
           ))}
         </div>
-        {selectedTHR[nomor] && (
-          <p className="text-green-700 mt-2">
-            THR yang dipilih: Rp. {selectedTHR[nomor].toLocaleString()}
-          </p>
-        )}
       </div>
 
       {/* Delete Button */}
