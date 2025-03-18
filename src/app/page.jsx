@@ -64,12 +64,12 @@ export default function Home() {
         </button> */}
       </div>
 
-      <div className="flex justify-center">
+      <div className="flex justify-center mt-[3svh]">
         <Image
-          src={"/assets/images/muffin-placeholder.png"}
+          src={"/assets/images/muffin-hero.png"}
           priority
-          width={1200}
-          height={1000}
+          width={700}
+          height={700}
           alt="image"
         />
       </div>
