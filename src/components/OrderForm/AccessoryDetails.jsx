@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import SignatureInput from "@/components/SignatureInput";
 import Message from "@/components/Message";
+import { toast } from "react-hot-toast";
 
 const AccessoryDetails = ({
   formData,
@@ -9,26 +10,24 @@ const AccessoryDetails = ({
   handleFileChange,
   onSaveSignature,
   signatureImage,
+  errors,
 }) => {
   const [isPreviewOpen, setIsPreviewOpen] = useState(false);
 
   const handleOpenPreview = () => {
     if (!selectedFile) {
-      alert("Mohon upload foto terlebih dahulu");
+      toast("Upload foto dulu yaa!");
       return;
     }
-    if (!formData.memo.trim()) {
-      alert("Mohon isi nama di polaroid terlebih dahulu");
+    if (!formData.namaPolaroid?.trim()) {
+      toast("Namanya tolong diisi yaa!");
       return;
     }
-    if (!formData.message.trim()) {
-      alert("Mohon isi pesan terlebih dahulu");
+    if (!formData.pesan?.trim()) {
+      toast("Pesannya tolong diisi yaa!");
       return;
     }
-    if (!signatureImage) {
-      alert("Mohon isi tanda tangan terlebih dahulu");
-      return;
-    }
+
     setIsPreviewOpen(true);
   };
 
@@ -58,7 +57,9 @@ const AccessoryDetails = ({
             />
             <div
               onClick={() => document.getElementById("attachment").click()}
-              className="w-full max-w-full bg-white border-2 border-[#C9CDC2] rounded-xl p-4 md:text-[2.6svh] text-[2.2svh] flex justify-between items-center cursor-pointer"
+              className={`w-full max-w-full bg-white border-2 rounded-xl p-4 md:text-[2.6svh] text-[2.2svh] flex justify-between items-center cursor-pointer ${
+                errors?.file ? "border-red-500" : "border-[#C9CDC2]"
+              }`}
             >
               <span className="text-gray-400">
                 {selectedFile
@@ -81,44 +82,58 @@ const AccessoryDetails = ({
                 <line x1="5" y1="12" x2="19" y2="12"></line>
               </svg>
             </div>
+            {errors?.file && (
+              <p className="text-red-500 text-sm mt-1">{errors.file}</p>
+            )}
           </div>
         </div>
 
         <div className="flex flex-col gap-1 mb-6">
           <label
             className="md:text-[2.6svh] text-[2.2svh] text-green-700"
-            htmlFor="memo"
+            htmlFor="namaPolaroid"
           >
             Nama di Polaroid
           </label>
           <input
-            className="w-full max-w-full bg-white border-2 border-[#C9CDC2] rounded-xl p-4 md:text-[2.6svh] text-[2.2svh]"
+            className={`w-full max-w-full bg-white border-2 rounded-xl p-4 md:text-[2.6svh] text-[2.2svh] ${
+              errors?.namaPolaroid ? "border-red-500" : "border-[#C9CDC2]"
+            }`}
             type="text"
-            id="memo"
-            name="memo"
-            value={formData.memo}
+            id="namaPolaroid"
+            name="namaPolaroid"
+            value={formData.namaPolaroid || ""}
             onChange={handleInputChange}
-            placeholder="Masukkan nama untuk dicetak di polaroid"
+            placeholder="Masukan nama yang akan dicetak di polaroid"
             required
           />
+          {errors?.namaPolaroid && (
+            <p className="text-red-500 text-sm mt-1">{errors.namaPolaroid}</p>
+          )}
         </div>
 
         <div className="flex flex-col gap-1 mb-6">
           <label
             className="md:text-[2.6svh] text-[2.2svh] text-green-700"
-            htmlFor="message"
+            htmlFor="pesan"
           >
             Pesan
           </label>
           <textarea
-            className="w-full max-w-full bg-white border-2 border-[#C9CDC2] rounded-xl p-4 md:text-[2.6svh] text-[2.2svh]"
-            id="message"
-            name="message"
-            value={formData.message}
+            className={`w-full max-w-full bg-white border-2 rounded-xl p-4 md:text-[2.6svh] text-[2.2svh] ${
+              errors?.pesan ? "border-red-500" : "border-[#C9CDC2]"
+            }`}
+            id="pesan"
+            name="pesan"
+            value={formData.pesan || ""}
             onChange={handleInputChange}
-            placeholder="Masukkan pesanmu untuk dicetak dalam surat"
+            placeholder="Masukan pesan yang akan dicetak di polaroid"
             required
-          ></textarea>
+            rows={3}
+          />
+          {errors?.pesan && (
+            <p className="text-red-500 text-sm mt-1">{errors.pesan}</p>
+          )}
         </div>
 
         <SignatureInput onSave={onSaveSignature} />
@@ -185,7 +200,7 @@ const AccessoryDetails = ({
                   </div>
                   <div className="flex justify-between items-center w-full h-auto">
                     <p className="text-lg sm:text-xl font-otherHand text-green-700">
-                      {formData.memo}
+                      {formData.namaPolaroid}
                     </p>
                     <img
                       src="/assets/icons/green-maaf-sign.svg"
@@ -196,10 +211,7 @@ const AccessoryDetails = ({
                 </div>
               </div>
               <div className="relative z-10 transform rotate-6 -mt-8 sm:-mt-12">
-                <Message
-                  message={formData.message}
-                  signature={signatureImage}
-                />
+                <Message message={formData.pesan} signature={signatureImage} />
               </div>
             </div>
           </div>

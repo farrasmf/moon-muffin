@@ -13,6 +13,7 @@ const Pesanan = ({
   handleTHRChange,
   selectedTHR,
   provinces,
+  errors,
 }) => {
   const pesananData = formData.pesanan.find((item) => item.nomor === nomor) || {
     nomor,
@@ -167,7 +168,9 @@ const Pesanan = ({
           Jumlah Item
         </label>
         <input
-          className="w-full max-w-full bg-white border-2 border-[#C9CDC2] rounded-xl p-4 md:text-[2.6svh] text-[2.2svh]"
+          className={`w-full max-w-full bg-white border-2 rounded-xl p-4 md:text-[2.6svh] text-[2.2svh] ${
+            errors?.jumlahItem ? "border-red-500" : "border-[#C9CDC2]"
+          }`}
           type="number"
           id={`jumlahItem-${nomor}`}
           name={`jumlahItem-${nomor}`}
@@ -178,6 +181,9 @@ const Pesanan = ({
           placeholder="Masukan jumlah item"
           required
         />
+        {errors?.jumlahItem && (
+          <p className="text-red-500 text-sm mt-1">{errors.jumlahItem}</p>
+        )}
       </div>
 
       <div className="flex flex-col gap-1 mb-6">
@@ -188,7 +194,9 @@ const Pesanan = ({
           Nama Penerima
         </label>
         <input
-          className="w-full max-w-full bg-white border-2 border-[#C9CDC2] rounded-xl p-4 md:text-[2.6svh] text-[2.2svh]"
+          className={`w-full max-w-full bg-white border-2 rounded-xl p-4 md:text-[2.6svh] text-[2.2svh] ${
+            errors?.namaPenerima ? "border-red-500" : "border-[#C9CDC2]"
+          }`}
           type="text"
           id={`namaPenerima-${nomor}`}
           name={`namaPenerima-${nomor}`}
@@ -199,6 +207,9 @@ const Pesanan = ({
           placeholder="Masukan nama penerima"
           required
         />
+        {errors?.namaPenerima && (
+          <p className="text-red-500 text-sm mt-1">{errors.namaPenerima}</p>
+        )}
       </div>
 
       <div className="flex flex-col gap-1 mb-6">
@@ -209,7 +220,9 @@ const Pesanan = ({
           Nomor WhatsApp Penerima
         </label>
         <input
-          className="w-full max-w-full bg-white border-2 border-[#C9CDC2] rounded-xl p-4 md:text-[2.6svh] text-[2.2svh]"
+          className={`w-full max-w-full bg-white border-2 rounded-xl p-4 md:text-[2.6svh] text-[2.2svh] ${
+            errors?.whatsappPenerima ? "border-red-500" : "border-[#C9CDC2]"
+          }`}
           type="tel"
           id={`whatsappPenerima-${nomor}`}
           name={`whatsappPenerima-${nomor}`}
@@ -220,6 +233,9 @@ const Pesanan = ({
           placeholder="Masukan nomor WhatsApp penerima"
           required
         />
+        {errors?.whatsappPenerima && (
+          <p className="text-red-500 text-sm mt-1">{errors.whatsappPenerima}</p>
+        )}
       </div>
 
       {/* Province Selection */}
@@ -233,12 +249,17 @@ const Pesanan = ({
         <div className="relative dropdown-container">
           <input
             type="text"
-            className="w-full max-w-full bg-white border-2 border-[#C9CDC2] rounded-xl p-4 md:text-[2.6svh] text-[2.2svh] cursor-pointer"
+            className={`w-full max-w-full bg-white border-2 rounded-xl p-4 md:text-[2.6svh] text-[2.2svh] cursor-pointer ${
+              errors?.provinsi ? "border-red-500" : "border-[#C9CDC2]"
+            }`}
             placeholder="Pilih provinsi"
             value={pesananData.provinsi || searchTerms.province}
             onChange={(e) => handleSearch("province", e.target.value)}
             onClick={() => toggleDropdown("province")}
           />
+          {errors?.provinsi && (
+            <p className="text-red-500 text-sm mt-1">{errors.provinsi}</p>
+          )}
           {dropdownStates.province && (
             <div className="absolute z-10 w-full mt-1 bg-white border rounded-xl max-h-60 overflow-y-auto shadow-lg">
               {getFilteredOptions(
@@ -280,6 +301,8 @@ const Pesanan = ({
             className={`w-full max-w-full border-2 rounded-xl p-4 md:text-[2.6svh] text-[2.2svh] ${
               !pesananData.provinceCode
                 ? "bg-gray-100 border-gray-200 cursor-not-allowed text-gray-400"
+                : errors?.kota
+                ? "bg-white border-red-500"
                 : "bg-white border-[#C9CDC2] cursor-pointer"
             }`}
             placeholder="Pilih kabupaten/kota"
@@ -290,6 +313,9 @@ const Pesanan = ({
             }
             disabled={!pesananData.provinceCode}
           />
+          {errors?.kota && (
+            <p className="text-red-500 text-sm mt-1">{errors.kota}</p>
+          )}
           {dropdownStates.regency && pesananData.provinceCode && (
             <div className="absolute z-10 w-full mt-1 bg-white border rounded-xl max-h-60 overflow-y-auto shadow-lg">
               {getFilteredOptions(
@@ -331,6 +357,8 @@ const Pesanan = ({
             className={`w-full max-w-full border-2 rounded-xl p-4 md:text-[2.6svh] text-[2.2svh] ${
               !pesananData.regencyCode
                 ? "bg-gray-100 border-gray-200 cursor-not-allowed text-gray-400"
+                : errors?.kecamatan
+                ? "bg-white border-red-500"
                 : "bg-white border-[#C9CDC2] cursor-pointer"
             }`}
             placeholder="Pilih kecamatan"
@@ -341,6 +369,9 @@ const Pesanan = ({
             }
             disabled={!pesananData.regencyCode}
           />
+          {errors?.kecamatan && (
+            <p className="text-red-500 text-sm mt-1">{errors.kecamatan}</p>
+          )}
           {dropdownStates.district && pesananData.regencyCode && (
             <div className="absolute z-10 w-full mt-1 bg-white border rounded-xl max-h-60 overflow-y-auto shadow-lg">
               {getFilteredOptions(
@@ -382,6 +413,8 @@ const Pesanan = ({
             className={`w-full max-w-full border-2 rounded-xl p-4 md:text-[2.6svh] text-[2.2svh] ${
               !pesananData.districtCode
                 ? "bg-gray-100 border-gray-200 cursor-not-allowed text-gray-400"
+                : errors?.kelurahan
+                ? "bg-white border-red-500"
                 : "bg-white border-[#C9CDC2] cursor-pointer"
             }`}
             placeholder="Pilih kelurahan"
@@ -392,6 +425,9 @@ const Pesanan = ({
             }
             disabled={!pesananData.districtCode}
           />
+          {errors?.kelurahan && (
+            <p className="text-red-500 text-sm mt-1">{errors.kelurahan}</p>
+          )}
           {dropdownStates.village && pesananData.districtCode && (
             <div className="absolute z-10 w-full mt-1 bg-white border rounded-xl max-h-60 overflow-y-auto shadow-lg">
               {getFilteredOptions(villages, "village", searchTerms.village).map(
@@ -431,7 +467,9 @@ const Pesanan = ({
           Kode Pos
         </label>
         <input
-          className="w-full max-w-full bg-gray-50 border-2 border-[#C9CDC2] rounded-xl p-4 md:text-[2.6svh] text-[2.2svh]"
+          className={`w-full max-w-full bg-gray-50 border-2 rounded-xl p-4 md:text-[2.6svh] text-[2.2svh] ${
+            errors?.kodePos ? "border-red-500" : "border-[#C9CDC2]"
+          }`}
           type="text"
           id={`kodePos-${nomor}`}
           name={`kodePos-${nomor}`}
@@ -439,6 +477,9 @@ const Pesanan = ({
           readOnly
           placeholder="Kode pos akan terisi otomatis"
         />
+        {errors?.kodePos && (
+          <p className="text-red-500 text-sm mt-1">{errors.kodePos}</p>
+        )}
       </div>
 
       {/* Detailed Address */}
@@ -450,7 +491,9 @@ const Pesanan = ({
           Alamat Lengkap
         </label>
         <textarea
-          className="w-full max-w-full bg-white border-2 border-[#C9CDC2] rounded-xl p-4 md:text-[2.6svh] text-[2.2svh]"
+          className={`w-full max-w-full bg-white border-2 rounded-xl p-4 md:text-[2.6svh] text-[2.2svh] ${
+            errors?.alamat ? "border-red-500" : "border-[#C9CDC2]"
+          }`}
           id={`alamat-${nomor}`}
           name={`alamat-${nomor}`}
           value={pesananData.alamat}
@@ -459,6 +502,9 @@ const Pesanan = ({
           required
           rows={3}
         />
+        {errors?.alamat && (
+          <p className="text-red-500 text-sm mt-1">{errors.alamat}</p>
+        )}
       </div>
 
       {/* THR Section */}

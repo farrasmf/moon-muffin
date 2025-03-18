@@ -31,6 +31,8 @@ export default function OrderPage() {
   );
   const [provinces] = useState(dummyProvinces);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [errors, setErrors] = useState({});
+  const [isFormSubmitted, setIsFormSubmitted] = useState(false);
 
   const [formData, setFormData] = useState({
     name: orderData.customerInfo?.name || "",
@@ -55,6 +57,12 @@ export default function OrderPage() {
       ...prev,
       [name]: value,
     }));
+    // Clear the corresponding error when input is modified
+    setErrors((prev) => {
+      const newErrors = { ...prev };
+      delete newErrors[name];
+      return newErrors;
+    });
   };
 
   const handlePesananChange = (nomor, field, value) => {
@@ -65,13 +73,119 @@ export default function OrderPage() {
           item.nomor === nomor ? { ...item, [field]: value } : item
         ) || [],
     }));
+    // Clear the pesanan error when any input is added
+    setErrors((prev) => {
+      const newErrors = { ...prev };
+      delete newErrors.pesanan;
+
+      // Clear specific location field errors
+      if (prev[`pesanan_${nomor}`]) {
+        const orderErrors = { ...prev[`pesanan_${nomor}`] };
+        delete orderErrors[field];
+        if (Object.keys(orderErrors).length === 0) {
+          delete newErrors[`pesanan_${nomor}`];
+        } else {
+          newErrors[`pesanan_${nomor}`] = orderErrors;
+        }
+      }
+
+      return newErrors;
+    });
+  };
+
+  const validateForm = () => {
+    const newErrors = {};
+    let hasError = false;
+
+    // Validate customer details
+    if (!formData.name.trim()) {
+      newErrors.name = "Nama harus diisi";
+      hasError = true;
+    }
+    if (!formData.email.trim()) {
+      newErrors.email = "Email harus diisi";
+      hasError = true;
+    }
+    if (!formData.whatsapp.trim()) {
+      newErrors.whatsapp = "Nomor WhatsApp harus diisi";
+      hasError = true;
+    }
+
+    // Validate orders
+    if (pesananList.length === 0) {
+      newErrors.pesanan = "Minimal harus ada 1 pesanan";
+      hasError = true;
+    }
+
+    // Validate each order
+    pesananList.forEach((nomor) => {
+      const pesanan = formData.pesanan.find((p) => p.nomor === nomor);
+      const orderErrors = {};
+
+      if (!pesanan.jumlahItem || parseInt(pesanan.jumlahItem) <= 0) {
+        orderErrors.jumlahItem = "Jumlah item harus diisi";
+      }
+      if (!pesanan.namaPenerima?.trim()) {
+        orderErrors.namaPenerima = "Nama penerima harus diisi";
+      }
+      if (!pesanan.whatsappPenerima?.trim()) {
+        orderErrors.whatsappPenerima = "Nomor WhatsApp penerima harus diisi";
+      }
+      if (!pesanan.alamat?.trim()) {
+        orderErrors.alamat = "Alamat harus diisi";
+      }
+      if (!pesanan.provinsi?.trim()) {
+        orderErrors.provinsi = "Provinsi harus diisi";
+      }
+      if (!pesanan.kota?.trim()) {
+        orderErrors.kota = "Kota harus diisi";
+      }
+      if (!pesanan.kecamatan?.trim()) {
+        orderErrors.kecamatan = "Kecamatan harus diisi";
+      }
+      if (!pesanan.kelurahan?.trim()) {
+        orderErrors.kelurahan = "Kelurahan harus diisi";
+      }
+      if (!pesanan.kodePos?.trim()) {
+        orderErrors.kodePos = "Kode pos harus diisi";
+      }
+
+      if (Object.keys(orderErrors).length > 0) {
+        newErrors[`pesanan_${nomor}`] = orderErrors;
+        hasError = true;
+      }
+    });
+
+    // Validate accessories
+    if (!selectedFile) {
+      newErrors.file = "File harus diupload";
+      hasError = true;
+    }
+    if (!formData.namaPolaroid?.trim()) {
+      newErrors.namaPolaroid = "Nama di polaroid harus diisi";
+      hasError = true;
+    }
+    if (!formData.pesan?.trim()) {
+      newErrors.pesan = "Pesan harus diisi";
+      hasError = true;
+    }
+
+    setErrors(newErrors);
+    return !hasError;
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsSubmitting(true);
+    setIsFormSubmitted(true);
 
     try {
+      if (!validateForm()) {
+        toast("Lengkapi dulu detailnya yaa!");
+        setIsSubmitting(false);
+        return;
+      }
+
       // Update context data
       const customerInfo = {
         name: formData.name,
@@ -136,6 +250,12 @@ export default function OrderPage() {
         },
       ],
     }));
+    // Clear the pesanan error when adding a new order
+    setErrors((prev) => {
+      const newErrors = { ...prev };
+      delete newErrors.pesanan;
+      return newErrors;
+    });
   };
 
   const removePesanan = (nomor) => {
@@ -189,6 +309,7 @@ export default function OrderPage() {
               <CustomerDetails
                 formData={formData}
                 handleInputChange={handleInputChange}
+                errors={errors}
               />
               <AccessoryDetails
                 formData={formData}
@@ -197,6 +318,7 @@ export default function OrderPage() {
                 handleFileChange={handleFileChange}
                 onSaveSignature={handleSaveSignature}
                 signatureImage={signatureImage}
+                errors={errors}
               />
 
               <h2 className="text-2xl text-green-700 mb-4">Detail Pesanan</h2>
@@ -210,6 +332,7 @@ export default function OrderPage() {
                   handleTHRChange={handleTHRChange}
                   selectedTHR={selectedTHR}
                   provinces={provinces}
+                  errors={errors[`pesanan_${nomor}`]}
                 />
               ))}
 
@@ -232,6 +355,11 @@ export default function OrderPage() {
                   />
                 </svg>
               </div>
+              {isFormSubmitted && errors.pesanan && (
+                <p className="text-red-500 text-center mb-8">
+                  {errors.pesanan}
+                </p>
+              )}
             </form>
           </div>
         </div>
