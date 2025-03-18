@@ -41,12 +41,14 @@ export default function OrderPage() {
         console.log("Gallery API response:", response);
         const result = await response.json();
         console.log("Gallery API result:", result);
-        if (result.data) {
-          console.log("Setting content names:", result.data);
-          setContentNames(result.data);
-        } else {
-          console.log("No data in result");
-        }
+
+        // Filter results for the current orderId and only include name
+        const filteredNames = result
+          .filter((item) => item.order_id === orderId)
+          .map((item) => ({ name: item.name }));
+
+        console.log("Filtered content names:", filteredNames);
+        setContentNames(filteredNames);
       } catch (error) {
         console.error("Error fetching content names:", error);
       }
