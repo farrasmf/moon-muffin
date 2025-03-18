@@ -246,45 +246,23 @@ const Pesanan = ({
         >
           Provinsi
         </label>
-        <div className="relative dropdown-container">
-          <input
-            type="text"
-            className={`w-full max-w-full bg-white border-2 rounded-xl p-4 md:text-[2.6svh] text-[2.2svh] cursor-pointer ${
-              errors?.provinsi ? "border-red-500" : "border-[#C9CDC2]"
-            }`}
-            placeholder="Pilih provinsi"
-            value={pesananData.provinsi || searchTerms.province}
-            onChange={(e) => handleSearch("province", e.target.value)}
-            onClick={() => toggleDropdown("province")}
-          />
-          {errors?.provinsi && (
-            <p className="text-red-500 text-sm mt-1">{errors.provinsi}</p>
-          )}
-          {dropdownStates.province && (
-            <div className="absolute z-10 w-full mt-1 bg-white border rounded-xl max-h-60 overflow-y-auto shadow-lg">
-              {getFilteredOptions(
-                provinces,
-                "province",
-                searchTerms.province
-              ).map((province) => (
-                <div
-                  key={province.code}
-                  className="p-3 hover:bg-gray-100 cursor-pointer"
-                  onClick={() =>
-                    handleLocationSelect(
-                      "provinsi",
-                      province.name,
-                      "provinceCode",
-                      province.code
-                    )
-                  }
-                >
-                  {province.name}
-                </div>
-              ))}
-            </div>
-          )}
-        </div>
+        <input
+          type="text"
+          className={`w-full max-w-full bg-white border-2 rounded-xl p-4 md:text-[2.6svh] text-[2.2svh] ${
+            errors?.provinsi ? "border-red-500" : "border-[#C9CDC2]"
+          }`}
+          id={`provinsi-${nomor}`}
+          name={`provinsi-${nomor}`}
+          value={pesananData.provinsi}
+          onChange={(e) =>
+            handlePesananChange(nomor, "provinsi", e.target.value)
+          }
+          placeholder="Masukan nama provinsi"
+          required
+        />
+        {errors?.provinsi && (
+          <p className="text-red-500 text-sm mt-1">{errors.provinsi}</p>
+        )}
       </div>
 
       {/* Regency/City Selection */}
@@ -295,52 +273,21 @@ const Pesanan = ({
         >
           Kabupaten/Kota
         </label>
-        <div className="relative dropdown-container">
-          <input
-            type="text"
-            className={`w-full max-w-full border-2 rounded-xl p-4 md:text-[2.6svh] text-[2.2svh] ${
-              !pesananData.provinceCode
-                ? "bg-gray-100 border-gray-200 cursor-not-allowed text-gray-400"
-                : errors?.kota
-                ? "bg-white border-red-500"
-                : "bg-white border-[#C9CDC2] cursor-pointer"
-            }`}
-            placeholder="Pilih kabupaten/kota"
-            value={pesananData.kota || searchTerms.regency}
-            onChange={(e) => handleSearch("regency", e.target.value)}
-            onClick={() =>
-              pesananData.provinceCode && toggleDropdown("regency")
-            }
-            disabled={!pesananData.provinceCode}
-          />
-          {errors?.kota && (
-            <p className="text-red-500 text-sm mt-1">{errors.kota}</p>
-          )}
-          {dropdownStates.regency && pesananData.provinceCode && (
-            <div className="absolute z-10 w-full mt-1 bg-white border rounded-xl max-h-60 overflow-y-auto shadow-lg">
-              {getFilteredOptions(
-                regencies,
-                "regency",
-                searchTerms.regency
-              ).map((regency) => (
-                <div
-                  key={regency.code}
-                  className="p-3 hover:bg-gray-100 cursor-pointer"
-                  onClick={() =>
-                    handleLocationSelect(
-                      "kota",
-                      regency.name,
-                      "regencyCode",
-                      regency.code
-                    )
-                  }
-                >
-                  {regency.name}
-                </div>
-              ))}
-            </div>
-          )}
-        </div>
+        <input
+          type="text"
+          className={`w-full max-w-full bg-white border-2 rounded-xl p-4 md:text-[2.6svh] text-[2.2svh] ${
+            errors?.kota ? "border-red-500" : "border-[#C9CDC2]"
+          }`}
+          id={`kota-${nomor}`}
+          name={`kota-${nomor}`}
+          value={pesananData.kota}
+          onChange={(e) => handlePesananChange(nomor, "kota", e.target.value)}
+          placeholder="Masukan nama kabupaten/kota"
+          required
+        />
+        {errors?.kota && (
+          <p className="text-red-500 text-sm mt-1">{errors.kota}</p>
+        )}
       </div>
 
       {/* District Selection */}
@@ -351,52 +298,23 @@ const Pesanan = ({
         >
           Kecamatan
         </label>
-        <div className="relative dropdown-container">
-          <input
-            type="text"
-            className={`w-full max-w-full border-2 rounded-xl p-4 md:text-[2.6svh] text-[2.2svh] ${
-              !pesananData.regencyCode
-                ? "bg-gray-100 border-gray-200 cursor-not-allowed text-gray-400"
-                : errors?.kecamatan
-                ? "bg-white border-red-500"
-                : "bg-white border-[#C9CDC2] cursor-pointer"
-            }`}
-            placeholder="Pilih kecamatan"
-            value={pesananData.kecamatan || searchTerms.district}
-            onChange={(e) => handleSearch("district", e.target.value)}
-            onClick={() =>
-              pesananData.regencyCode && toggleDropdown("district")
-            }
-            disabled={!pesananData.regencyCode}
-          />
-          {errors?.kecamatan && (
-            <p className="text-red-500 text-sm mt-1">{errors.kecamatan}</p>
-          )}
-          {dropdownStates.district && pesananData.regencyCode && (
-            <div className="absolute z-10 w-full mt-1 bg-white border rounded-xl max-h-60 overflow-y-auto shadow-lg">
-              {getFilteredOptions(
-                districts,
-                "district",
-                searchTerms.district
-              ).map((district) => (
-                <div
-                  key={district.code}
-                  className="p-3 hover:bg-gray-100 cursor-pointer"
-                  onClick={() =>
-                    handleLocationSelect(
-                      "kecamatan",
-                      district.name,
-                      "districtCode",
-                      district.code
-                    )
-                  }
-                >
-                  {district.name}
-                </div>
-              ))}
-            </div>
-          )}
-        </div>
+        <input
+          type="text"
+          className={`w-full max-w-full bg-white border-2 rounded-xl p-4 md:text-[2.6svh] text-[2.2svh] ${
+            errors?.kecamatan ? "border-red-500" : "border-[#C9CDC2]"
+          }`}
+          id={`kecamatan-${nomor}`}
+          name={`kecamatan-${nomor}`}
+          value={pesananData.kecamatan}
+          onChange={(e) =>
+            handlePesananChange(nomor, "kecamatan", e.target.value)
+          }
+          placeholder="Masukan nama kecamatan"
+          required
+        />
+        {errors?.kecamatan && (
+          <p className="text-red-500 text-sm mt-1">{errors.kecamatan}</p>
+        )}
       </div>
 
       {/* Village Selection */}
@@ -407,55 +325,23 @@ const Pesanan = ({
         >
           Kelurahan
         </label>
-        <div className="relative dropdown-container">
-          <input
-            type="text"
-            className={`w-full max-w-full border-2 rounded-xl p-4 md:text-[2.6svh] text-[2.2svh] ${
-              !pesananData.districtCode
-                ? "bg-gray-100 border-gray-200 cursor-not-allowed text-gray-400"
-                : errors?.kelurahan
-                ? "bg-white border-red-500"
-                : "bg-white border-[#C9CDC2] cursor-pointer"
-            }`}
-            placeholder="Pilih kelurahan"
-            value={pesananData.kelurahan || searchTerms.village}
-            onChange={(e) => handleSearch("village", e.target.value)}
-            onClick={() =>
-              pesananData.districtCode && toggleDropdown("village")
-            }
-            disabled={!pesananData.districtCode}
-          />
-          {errors?.kelurahan && (
-            <p className="text-red-500 text-sm mt-1">{errors.kelurahan}</p>
-          )}
-          {dropdownStates.village && pesananData.districtCode && (
-            <div className="absolute z-10 w-full mt-1 bg-white border rounded-xl max-h-60 overflow-y-auto shadow-lg">
-              {getFilteredOptions(villages, "village", searchTerms.village).map(
-                (village) => (
-                  <div
-                    key={village.code}
-                    className="p-3 hover:bg-gray-100 cursor-pointer"
-                    onClick={() => {
-                      handleLocationSelect(
-                        "kelurahan",
-                        village.name,
-                        "villageCode",
-                        village.code
-                      );
-                      handlePesananChange(
-                        nomor,
-                        "kodePos",
-                        village.postal_code
-                      );
-                    }}
-                  >
-                    {village.name}
-                  </div>
-                )
-              )}
-            </div>
-          )}
-        </div>
+        <input
+          type="text"
+          className={`w-full max-w-full bg-white border-2 rounded-xl p-4 md:text-[2.6svh] text-[2.2svh] ${
+            errors?.kelurahan ? "border-red-500" : "border-[#C9CDC2]"
+          }`}
+          id={`kelurahan-${nomor}`}
+          name={`kelurahan-${nomor}`}
+          value={pesananData.kelurahan}
+          onChange={(e) =>
+            handlePesananChange(nomor, "kelurahan", e.target.value)
+          }
+          placeholder="Masukan nama kelurahan"
+          required
+        />
+        {errors?.kelurahan && (
+          <p className="text-red-500 text-sm mt-1">{errors.kelurahan}</p>
+        )}
       </div>
 
       {/* Postal Code */}
@@ -467,15 +353,18 @@ const Pesanan = ({
           Kode Pos
         </label>
         <input
-          className={`w-full max-w-full bg-gray-50 border-2 rounded-xl p-4 md:text-[2.6svh] text-[2.2svh] ${
+          className={`w-full max-w-full bg-white border-2 rounded-xl p-4 md:text-[2.6svh] text-[2.2svh] ${
             errors?.kodePos ? "border-red-500" : "border-[#C9CDC2]"
           }`}
           type="text"
           id={`kodePos-${nomor}`}
           name={`kodePos-${nomor}`}
           value={pesananData.kodePos}
-          readOnly
-          placeholder="Kode pos akan terisi otomatis"
+          onChange={(e) =>
+            handlePesananChange(nomor, "kodePos", e.target.value)
+          }
+          placeholder="Masukan kode pos"
+          required
         />
         {errors?.kodePos && (
           <p className="text-red-500 text-sm mt-1">{errors.kodePos}</p>

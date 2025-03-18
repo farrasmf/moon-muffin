@@ -186,7 +186,7 @@ export default function Home() {
             </button>
           </Link>
 
-          <Link href={"/create-order"}>
+          <Link href={"/order"}>
             {" "}
             <button className="text-[2svh] md:text-[2.2svh] bg-[#92ED00] flex items-center gap-1 px-4 py-2 rounded-full font-medium text-[#046511]">
               Pesan Sekarang!
@@ -427,7 +427,7 @@ export default function Home() {
             alt="icon"
             className="md:h-[6svh] h-[4svh] mr-[1svh]"
           />
-          <Link href={"/create-order"}>
+          <Link href={"/order"}>
             <button className="bg-[#92ED00] md:px-[4svh] px-[6svw] py-[1.5svh] rounded-full md:text-[4svh] text-[2.4svh] font-medium text-[#046511]">
               Pesan Sekarang!
             </button>

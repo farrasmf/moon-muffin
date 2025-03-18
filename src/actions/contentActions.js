@@ -11,7 +11,11 @@ import { redirect } from "next/navigation";
 export async function validateOrderId(orderId) {
   try {
     // Periksa apakah order_id ada di tabel orders
-    const { data, error } = await supabase.from("orders").select("id").eq("id", orderId).single();
+    const { data, error } = await supabase
+      .from("orders")
+      .select("id")
+      .eq("id", orderId)
+      .single();
 
     if (error || !data) {
       console.error("Order tidak valid:", error);
@@ -52,13 +56,18 @@ export async function saveContent(formData, orderId) {
       throw new Error("Semua field harus diisi");
     }
 
-    // Upload video ke Supabase Storage
+    // Upload video ke Supabase Storage dengan progress
+    console.log("Uploading video...");
     const videoUrl = await uploadFile(videoFile, "contents");
+    console.log("Video uploaded successfully");
 
     // Upload signature (base64) ke Supabase Storage
+    console.log("Uploading signature...");
     const signatureUrl = await uploadBase64Image(signatureBase64, "contents");
+    console.log("Signature uploaded successfully");
 
     // Simpan data ke tabel contents
+    console.log("Saving data to database...");
     const { data, error } = await supabase
       .from("contents")
       .insert({
@@ -67,6 +76,7 @@ export async function saveContent(formData, orderId) {
         video_url: videoUrl,
         signature_url: signatureUrl,
         order_id: orderId,
+        consent: formData.get("consent") === "1",
       })
       .select()
       .single();
@@ -75,6 +85,7 @@ export async function saveContent(formData, orderId) {
       throw new Error(`Error saat menyimpan konten: ${error.message}`);
     }
 
+    console.log("Data saved successfully");
     return {
       success: true,
       data,
@@ -99,12 +110,26 @@ async function uploadFile(file, bucket) {
     const fileExt = file.name.split(".").pop();
     const fileName = `video_${Date.now()}.${fileExt}`;
 
-    const { data, error } = await supabase.storage.from(bucket).upload(fileName, file);
+    console.log(`Starting upload of ${fileName} to ${bucket}...`);
 
-    if (error) throw error;
+    const { data, error } = await supabase.storage
+      .from(bucket)
+      .upload(fileName, file, {
+        cacheControl: "3600",
+        upsert: false,
+      });
+
+    if (error) {
+      console.error("Upload error:", error);
+      throw error;
+    }
+
+    console.log("File uploaded successfully");
 
     // Dapatkan URL publik file
-    const { data: urlData } = supabase.storage.from(bucket).getPublicUrl(fileName);
+    const { data: urlData } = supabase.storage
+      .from(bucket)
+      .getPublicUrl(fileName);
 
     return urlData.publicUrl;
   } catch (error) {
@@ -137,12 +162,16 @@ async function uploadBase64Image(base64String, bucket) {
     const fileName = `signature_${Date.now()}.png`;
 
     // Upload blob ke Supabase storage
-    const { data, error } = await supabase.storage.from(bucket).upload(fileName, blob);
+    const { data, error } = await supabase.storage
+      .from(bucket)
+      .upload(fileName, blob);
 
     if (error) throw error;
 
     // Dapatkan URL publik file
-    const { data: urlData } = supabase.storage.from(bucket).getPublicUrl(fileName);
+    const { data: urlData } = supabase.storage
+      .from(bucket)
+      .getPublicUrl(fileName);
 
     return urlData.publicUrl;
   } catch (error) {
