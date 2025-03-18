@@ -16,7 +16,7 @@ export default function SignatureInput({ onSave }) {
   return (
     <div className="flex flex-col gap-2 mb-6">
       <label className="text-xl text-green-700" htmlFor="signature">
-        Tanda Tangan
+        Tanda Tangan <span className="text-base">(Opsional)</span>
       </label>
 
       <div

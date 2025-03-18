@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 
-const Pesanan = ({ nomor, formData, handlePesananChange, handleRemove, handleTHRChange, selectedTHR, provinces }) => {
+const Pesanan = ({ nomor, formData, handlePesananChange, handleRemove, handleTHRChange, selectedTHR, errors }) => {
   const pesananData = formData.pesanan.find((item) => item.nomor === nomor) || {
     nomor,
     jumlahItem: "",
@@ -38,7 +38,7 @@ const Pesanan = ({ nomor, formData, handlePesananChange, handleRemove, handleTHR
 
     setIsSearching(true);
     try {
-      const response = await fetch(`http://localhost:3001/search/?q=${encodeURIComponent(query)}`);
+      const response = await fetch(`https://kodepos.vercel.app/search/?q=${encodeURIComponent(query)}`);
       if (!response.ok) {
         throw new Error("Gagal mengambil data");
       }
@@ -59,7 +59,7 @@ const Pesanan = ({ nomor, formData, handlePesananChange, handleRemove, handleTHR
       if (searchTerms.searchQuery) {
         searchLocation(searchTerms.searchQuery);
       }
-    }, 500);
+    }, 10);
 
     return () => clearTimeout(timer);
   }, [searchTerms.searchQuery]);
@@ -104,7 +104,9 @@ const Pesanan = ({ nomor, formData, handlePesananChange, handleRemove, handleTHR
           Jumlah Item
         </label>
         <input
-          className="w-full max-w-full bg-white border-2 border-[#C9CDC2] rounded-xl p-4 md:text-[2.6svh] text-[2.2svh]"
+          className={`w-full max-w-full bg-white border-2 rounded-xl p-4 md:text-[2.6svh] text-[2.2svh] ${
+            errors?.jumlahItem ? "border-red-500" : "border-[#C9CDC2]"
+          }`}
           type="number"
           id={`jumlahItem-${nomor}`}
           name={`jumlahItem-${nomor}`}
@@ -113,6 +115,9 @@ const Pesanan = ({ nomor, formData, handlePesananChange, handleRemove, handleTHR
           placeholder="Masukan jumlah item"
           required
         />
+        {errors?.jumlahItem && (
+          <p className="text-red-500 text-sm mt-1">{errors.jumlahItem}</p>
+        )}
       </div>
 
       <div className="flex flex-col gap-1 mb-6">
@@ -120,7 +125,9 @@ const Pesanan = ({ nomor, formData, handlePesananChange, handleRemove, handleTHR
           Nama Penerima
         </label>
         <input
-          className="w-full max-w-full bg-white border-2 border-[#C9CDC2] rounded-xl p-4 md:text-[2.6svh] text-[2.2svh]"
+          className={`w-full max-w-full bg-white border-2 rounded-xl p-4 md:text-[2.6svh] text-[2.2svh] ${
+            errors?.namaPenerima ? "border-red-500" : "border-[#C9CDC2]"
+          }`}
           type="text"
           id={`namaPenerima-${nomor}`}
           name={`namaPenerima-${nomor}`}
@@ -129,6 +136,9 @@ const Pesanan = ({ nomor, formData, handlePesananChange, handleRemove, handleTHR
           placeholder="Masukan nama penerima"
           required
         />
+        {errors?.namaPenerima && (
+          <p className="text-red-500 text-sm mt-1">{errors.namaPenerima}</p>
+        )}
       </div>
 
       <div className="flex flex-col gap-1 mb-6">
@@ -136,7 +146,9 @@ const Pesanan = ({ nomor, formData, handlePesananChange, handleRemove, handleTHR
           Nomor WhatsApp Penerima
         </label>
         <input
-          className="w-full max-w-full bg-white border-2 border-[#C9CDC2] rounded-xl p-4 md:text-[2.6svh] text-[2.2svh]"
+          className={`w-full max-w-full bg-white border-2 rounded-xl p-4 md:text-[2.6svh] text-[2.2svh] ${
+            errors?.whatsappPenerima ? "border-red-500" : "border-[#C9CDC2]"
+          }`}
           type="tel"
           id={`whatsappPenerima-${nomor}`}
           name={`whatsappPenerima-${nomor}`}
@@ -145,6 +157,9 @@ const Pesanan = ({ nomor, formData, handlePesananChange, handleRemove, handleTHR
           placeholder="Masukan nomor WhatsApp penerima"
           required
         />
+        {errors?.whatsappPenerima && (
+          <p className="text-red-500 text-sm mt-1">{errors.whatsappPenerima}</p>
+        )}
       </div>
 
       {/* Pencarian Lokasi API */}
@@ -259,14 +274,22 @@ const Pesanan = ({ nomor, formData, handlePesananChange, handleRemove, handleTHR
           Kode Pos
         </label>
         <input
-          className="w-full max-w-full bg-gray-50 border-2 border-[#C9CDC2] rounded-xl p-4 md:text-[2.6svh] text-[2.2svh]"
+          className={`w-full max-w-full bg-white border-2 rounded-xl p-4 md:text-[2.6svh] text-[2.2svh] ${
+            errors?.kodePos ? "border-red-500" : "border-[#C9CDC2]"
+          }`}
           type="text"
           id={`kodePos-${nomor}`}
           name={`kodePos-${nomor}`}
           value={pesananData.kodePos}
-          readOnly
-          placeholder="Kode pos akan terisi otomatis"
+          onChange={(e) =>
+            handlePesananChange(nomor, "kodePos", e.target.value)
+          }
+          placeholder="Masukan kode pos"
+          required
         />
+        {errors?.kodePos && (
+          <p className="text-red-500 text-sm mt-1">{errors.kodePos}</p>
+        )}
       </div>
 
       {/* Detailed Address */}
@@ -275,7 +298,9 @@ const Pesanan = ({ nomor, formData, handlePesananChange, handleRemove, handleTHR
           Alamat Lengkap
         </label>
         <textarea
-          className="w-full max-w-full bg-white border-2 border-[#C9CDC2] rounded-xl p-4 md:text-[2.6svh] text-[2.2svh]"
+          className={`w-full max-w-full bg-white border-2 rounded-xl p-4 md:text-[2.6svh] text-[2.2svh] ${
+            errors?.alamat ? "border-red-500" : "border-[#C9CDC2]"
+          }`}
           id={`alamat-${nomor}`}
           name={`alamat-${nomor}`}
           value={pesananData.alamat}
@@ -284,6 +309,9 @@ const Pesanan = ({ nomor, formData, handlePesananChange, handleRemove, handleTHR
           required
           rows={3}
         />
+        {errors?.alamat && (
+          <p className="text-red-500 text-sm mt-1">{errors.alamat}</p>
+        )}
       </div>
 
       {/* THR Section */}

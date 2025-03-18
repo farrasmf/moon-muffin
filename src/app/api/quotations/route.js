@@ -6,16 +6,17 @@ const LALAMOVE_SECRET = process.env.LALAMOVE_SECRET;
 const LALAMOVE_BASE_URL = process.env.LALAMOVE_BASE_URL || "https://rest.lalamove.com";
 
 // Fungsi untuk mendapatkan signature
-const generateSignature = (method, path, timestamp, body = "") => {
+const generateSignature = (method, path, timestamp, body) => {
   const rawSignature = `${timestamp}\n${method}\n${path}\n${body}\n`;
-  const signature = crypto.createHmac("sha256", LALAMOVE_SECRET).update(rawSignature).digest("hex");
+  const hmac = crypto.createHmac("sha256", LALAMOVE_SECRET);
+  const signature = hmac.update(rawSignature).digest("hex");
   return signature;
 };
 
 export async function POST(request) {
   try {
     const stops = await request.json();
-    const timestamp = new Date().getTime();
+    const timestamp = Date.now().toString();
     const path = "/v3/quotations";
     const method = "POST";
 
