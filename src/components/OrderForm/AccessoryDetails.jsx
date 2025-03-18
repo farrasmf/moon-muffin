@@ -187,7 +187,10 @@ const AccessoryDetails = ({
 
       {/* Preview Modal */}
       {isPreviewOpen && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+        <div
+          onClick={handleClosePreview}
+          className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-[100]"
+        >
           <div className="relative w-full max-w-4xl mx-4">
             <button
               onClick={handleClosePreview}
@@ -209,7 +212,7 @@ const AccessoryDetails = ({
             </button>
             <div className="relative flex flex-col sm:flex-row justify-center">
               <div className="relative z-10 transform -rotate-6">
-                <div className="bg-white w-full sm:w-[360px] h-[434px] flex flex-col p-2 sm:p-4 gap-2 sm:gap-3">
+                <div className="bg-white w-full sm:w-[360px] h-[50svh] flex flex-col p-2 sm:p-4 gap-2 sm:gap-3">
                   <div className="w-full h-full overflow-hidden">
                     {selectedFile && (
                       <img
@@ -231,7 +234,7 @@ const AccessoryDetails = ({
                   </div>
                 </div>
               </div>
-              <div className="relative z-10 transform rotate-6 -mt-8 sm:-mt-12">
+              <div className="relative z-10 transform rotate-6 max-h-[35svh] -mt-8 sm:-mt-12">
                 <Message message={formData.pesan} signature={signatureImage} />
               </div>
             </div>

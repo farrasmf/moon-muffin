@@ -225,8 +225,8 @@ export default function OrderPage() {
   // Tampilkan loading selama validasi
   if (isValidating) {
     return (
-      <div className="min-h-screen bg-[#EDF0E7] flex items-center justify-center">
-        <p className="text-[3.6svh] text-center text-green-700">
+      <div className="min-h-screen bg-[#EDF0E7] flex items-center justify-center p-[8svh]">
+        <p className="text-[3svh] md:text-[3.6svh] text-center text-green-700">
           Kita cek kode pesanan kamu dulu yaa!
         </p>
       </div>
@@ -495,11 +495,14 @@ export default function OrderPage() {
 
       {/* Preview Modal */}
       {isPreviewOpen && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+        <div
+          className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-[100]"
+          onClick={handleClosePreview}
+        >
           <div className="relative w-full max-w-4xl mx-4">
             <button
               onClick={handleClosePreview}
-              className="absolute -right-4 -top-4 w-8 h-8 bg-white rounded-full flex items-center justify-center shadow-lg hover:bg-gray-100 z-10"
+              className="absolute -right-4 -top-[10svh] w-8 h-8 bg-white rounded-full flex items-center justify-center shadow-lg hover:bg-gray-100 z-10"
             >
               <svg
                 className="w-6 h-6 text-gray-500"
@@ -517,7 +520,7 @@ export default function OrderPage() {
             </button>
             <div className="relative flex flex-col sm:flex-row justify-center">
               <div className="relative z-10 transform -rotate-6">
-                <div className="bg-white w-[280px] aspect-[9/16] max-h-[50svh] flex flex-col p-2 sm:p-4 gap-2 sm:gap-3">
+                <div className="bg-white w-[280px] aspect-[9/16] max-h-[40svh] flex flex-col p-2 sm:p-4 gap-2 sm:gap-3">
                   <div className="w-full h-full overflow-hidden">
                     <video
                       src={recordedVideo}
