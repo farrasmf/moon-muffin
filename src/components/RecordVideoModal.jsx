@@ -39,8 +39,9 @@ export default function RecordVideoModal({ isOpen, onClose, onSave }) {
     if (recordedChunks.length > 0) {
       const blob = new Blob(recordedChunks, { type: "video/webm" });
       const url = URL.createObjectURL(blob);
-      onSave(url);
+      onSave(url, blob);
       onClose();
+      setRecordedChunks([]);
     }
   };
 
@@ -73,7 +74,11 @@ export default function RecordVideoModal({ isOpen, onClose, onSave }) {
                 <button onClick={stopRecording} className="bg-gray-600 px-6 py-3 rounded-full font-medium text-xl text-white hover:bg-gray-700 transition-colors">
                   Stop
                 </button>
-                <button onClick={saveRecording} className="bg-green-700 px-6 py-3 rounded-full font-medium text-xl text-white hover:bg-green-800 transition-colors">
+                <button
+                  onClick={saveRecording}
+                  disabled={recordedChunks.length === 0}
+                  className={`${recordedChunks.length === 0 ? "bg-green-300" : "bg-green-700 hover:bg-green-800"} px-6 py-3 rounded-full font-medium text-xl text-white transition-colors`}
+                >
                   Simpan
                 </button>
               </>
