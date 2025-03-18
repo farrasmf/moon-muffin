@@ -241,8 +241,31 @@ export default function OrderPage() {
         return;
       }
 
-      // Update context data
-      updateCustomerInfo(orderData.customerInfo);
+      // Create order with payment ID and files
+      const orderResult = await createOrder({
+        ...orderData,
+        customerInfo: {
+          ...orderData.customerInfo,
+          paymentId: paymentResult.data.id,
+        },
+      });
+
+      if (!orderResult.success) {
+        console.error(
+          "Order creation failed:",
+          orderResult.error,
+          orderResult.details
+        );
+        toast.error(`Gagal membuat pesanan: ${orderResult.error}`);
+        setIsSubmitting(false);
+        return;
+      }
+
+      // Update context data with payment ID
+      updateCustomerInfo({
+        ...orderData.customerInfo,
+        paymentId: paymentResult.data.id,
+      });
       updatePesanan(formData.pesanan);
       updateSelectedTHR(selectedTHR);
       updateFile(selectedFile);

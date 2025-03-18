@@ -1,6 +1,15 @@
 "use server";
 
-import { supabase } from "@/utils/supabase/server";
+import { createClient } from "@supabase/supabase-js";
+
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_SERVICE_ROLE_KEY;
+
+if (!supabaseUrl || !supabaseKey) {
+  throw new Error("Missing Supabase environment variables");
+}
+
+const supabase = createClient(supabaseUrl, supabaseKey);
 
 /**
  * Fungsi untuk menyimpan data pesanan ke Supabase
@@ -9,71 +18,169 @@ import { supabase } from "@/utils/supabase/server";
  */
 export async function createOrder(orderData) {
   try {
-    // Ekstrak data customer
-    const { customerInfo, pesanan, selectedFile, signatureImage, selectedTHR } =
+    // Extract customer data and order details
+    const { customerInfo, pesanan, selectedTHR, selectedFile, signatureImage } =
       orderData;
 
-    // Simpan data ke tabel orders
-    const { data: orderInsert, error: orderError } = await supabase
+    // Handle file uploads first
+    let polaroidUrl = null;
+    let signatureUrl = null;
+
+    if (selectedFile) {
+      const fileExt = selectedFile.name.split(".").pop();
+      const fileName = `${Math.random()
+        .toString(36)
+        .substring(2, 15)}_${Date.now()}.${fileExt}`;
+
+      const { data: fileData, error: fileError } = await supabase.storage
+        .from("polaroids")
+        .upload(fileName, selectedFile);
+
+      if (fileError) {
+        console.error("Error uploading polaroid:", fileError);
+        return {
+          success: false,
+          error: "Error saat mengupload file polaroid",
+          details: fileError,
+        };
+      }
+
+      const { data: urlData } = supabase.storage
+        .from("polaroids")
+        .getPublicUrl(fileName);
+
+      polaroidUrl = urlData.publicUrl;
+    }
+
+    if (signatureImage) {
+      const base64Data = signatureImage.split(",")[1];
+      const byteCharacters = atob(base64Data);
+      const byteArrays = [];
+
+      for (let i = 0; i < byteCharacters.length; i++) {
+        byteArrays.push(byteCharacters.charCodeAt(i));
+      }
+
+      const byteArray = new Uint8Array(byteArrays);
+      const blob = new Blob([byteArray], { type: "image/png" });
+      const fileName = `signature_${Date.now()}.png`;
+
+      const { data: signatureData, error: signatureError } =
+        await supabase.storage.from("signatures").upload(fileName, blob);
+
+      if (signatureError) {
+        console.error("Error uploading signature:", signatureError);
+        return {
+          success: false,
+          error: "Error saat mengupload signature",
+          details: signatureError,
+        };
+      }
+
+      const { data: urlData } = supabase.storage
+        .from("signatures")
+        .getPublicUrl(fileName);
+
+      signatureUrl = urlData.publicUrl;
+    }
+
+    // Create payment record first
+    const { data: paymentData, error: paymentError } = await supabase
+      .from("payments")
+      .insert([
+        {
+          payment_id: customerInfo.paymentId,
+          external_id: customerInfo.paymentId,
+          amount: 10000, // This should match the amount from Xendit
+          status: "pending",
+          payment_method: "qris",
+        },
+      ])
+      .select()
+      .single();
+
+    if (paymentError) {
+      console.error("Error creating payment:", paymentError);
+      return {
+        success: false,
+        error: "Error saat menyimpan payment",
+        details: paymentError,
+      };
+    }
+
+    if (!paymentData) {
+      console.error("No payment data returned");
+      return {
+        success: false,
+        error: "Error saat menyimpan payment: No data returned",
+        details: "No payment data returned",
+      };
+    }
+
+    // Insert order data
+    const { data: createdOrder, error: orderError } = await supabase
       .from("orders")
-      .insert({
-        order_name: customerInfo.name,
-        email: customerInfo.email,
-        whatsapp: customerInfo.whatsapp,
-        polaroid_url: selectedFile
-          ? await uploadFile(selectedFile, "polaroids")
-          : null,
-        caption: customerInfo.memo,
-        signature_url: signatureImage
-          ? await uploadBase64Image(signatureImage, "signatures")
-          : null,
-        message: customerInfo.message,
-        delivery_date: customerInfo.delivery_date,
-        status: "created",
-      })
+      .insert([
+        {
+          order_name: customerInfo.name,
+          email: customerInfo.email,
+          whatsapp: customerInfo.whatsapp,
+          caption: customerInfo.caption,
+          message: customerInfo.message,
+          delivery_date: customerInfo.delivery_date,
+          status: "pending",
+          payment_id: paymentData.payment_id,
+          polaroid_url: polaroidUrl,
+          signature_url: signatureUrl,
+        },
+      ])
       .select()
       .single();
 
     if (orderError) {
-      throw new Error(`Error saat menyimpan order: ${orderError.message}`);
+      console.error("Error creating order:", orderError);
+      return {
+        success: false,
+        error: "Error saat menyimpan order",
+        details: orderError,
+      };
     }
 
-    // Dapatkan ID order yang baru dibuat
-    const orderId = orderInsert.id;
+    // Insert shipping data for each order
+    for (const order of pesanan) {
+      const { error: shippingError } = await supabase.from("shippings").insert([
+        {
+          order_id: createdOrder.id,
+          recipient_name: order.namaPenerima,
+          whatsapp: order.whatsappPenerima,
+          address: order.alamat,
+          item_total: parseInt(order.jumlahItem),
+          allowance: selectedTHR[order.nomor] || "0",
+        },
+      ]);
 
-    // Persiapkan data shipping untuk dimasukkan ke tabel shipping
-    const shippingData = pesanan.map((item) => ({
-      order_id: orderId,
-      item_total: item.jumlahItem,
-      recipient_name: item.namaPenerima,
-      whatsapp: item.whatsappPenerima,
-      address: `${item.alamat}, ${item.kelurahan}, ${item.kecamatan}, ${item.kota}, ${item.provinsi} ${item.kodePos}`,
-      allowance: selectedTHR[item.nomor] || null,
-    }));
-
-    // Simpan data ke tabel shipping
-    const { error: shippingError } = await supabase
-      .from("shippings")
-      .insert(shippingData);
-
-    if (shippingError) {
-      throw new Error(
-        `Error saat menyimpan shipping: ${shippingError.message}`
-      );
+      if (shippingError) {
+        console.error("Error creating shipping:", shippingError);
+        return {
+          success: false,
+          error: "Error saat menyimpan shipping",
+          details: shippingError,
+        };
+      }
     }
 
     return {
       success: true,
-      data: {
-        orderId,
-        orderData: orderInsert,
-      },
+      data: createdOrder,
     };
   } catch (error) {
-    console.error("Error creating order:", error);
+    console.error("Error in createOrder:", error);
     return {
       success: false,
-      error: error.message,
+      error: `Terjadi kesalahan saat membuat pesanan: ${
+        error.message || error
+      }`,
+      details: error,
     };
   }
 }
@@ -84,7 +191,7 @@ export async function createOrder(orderData) {
  * @param {string} bucket - Nama bucket penyimpanan
  * @returns {string} - URL file yang diupload
  */
-async function uploadFile(file, bucket) {
+export async function uploadFile(file, bucket) {
   try {
     const fileExt = file.name.split(".").pop();
     const fileName = `${Math.random()
@@ -115,7 +222,7 @@ async function uploadFile(file, bucket) {
  * @param {string} bucket - Nama bucket penyimpanan
  * @returns {string} - URL gambar yang diupload
  */
-async function uploadBase64Image(base64String, bucket) {
+export async function uploadBase64Image(base64String, bucket) {
   try {
     // Konversi base64 string ke blob
     const base64Data = base64String.split(",")[1];
