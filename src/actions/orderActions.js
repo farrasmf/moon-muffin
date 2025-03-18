@@ -10,7 +10,8 @@ import { supabase } from "@/utils/supabase/server";
 export async function createOrder(orderData) {
   try {
     // Ekstrak data customer
-    const { customerInfo, pesanan, selectedFile, signatureImage, selectedTHR } = orderData;
+    const { customerInfo, pesanan, selectedFile, signatureImage, selectedTHR } =
+      orderData;
 
     // Simpan data ke tabel orders
     const { data: orderInsert, error: orderError } = await supabase
@@ -19,10 +20,15 @@ export async function createOrder(orderData) {
         order_name: customerInfo.name,
         email: customerInfo.email,
         whatsapp: customerInfo.whatsapp,
-        polaroid_url: selectedFile ? await uploadFile(selectedFile, "polaroids") : null,
+        polaroid_url: selectedFile
+          ? await uploadFile(selectedFile, "polaroids")
+          : null,
         caption: customerInfo.memo,
-        signature_url: signatureImage ? await uploadBase64Image(signatureImage, "signatures") : null,
+        signature_url: signatureImage
+          ? await uploadBase64Image(signatureImage, "signatures")
+          : null,
         message: customerInfo.message,
+        status: "created",
       })
       .select()
       .single();
@@ -45,10 +51,14 @@ export async function createOrder(orderData) {
     }));
 
     // Simpan data ke tabel shipping
-    const { error: shippingError } = await supabase.from("shippings").insert(shippingData);
+    const { error: shippingError } = await supabase
+      .from("shippings")
+      .insert(shippingData);
 
     if (shippingError) {
-      throw new Error(`Error saat menyimpan shipping: ${shippingError.message}`);
+      throw new Error(
+        `Error saat menyimpan shipping: ${shippingError.message}`
+      );
     }
 
     return {
@@ -76,14 +86,20 @@ export async function createOrder(orderData) {
 async function uploadFile(file, bucket) {
   try {
     const fileExt = file.name.split(".").pop();
-    const fileName = `${Math.random().toString(36).substring(2, 15)}_${Date.now()}.${fileExt}`;
+    const fileName = `${Math.random()
+      .toString(36)
+      .substring(2, 15)}_${Date.now()}.${fileExt}`;
 
-    const { data, error } = await supabase.storage.from(bucket).upload(fileName, file);
+    const { data, error } = await supabase.storage
+      .from(bucket)
+      .upload(fileName, file);
 
     if (error) throw error;
 
     // Dapatkan URL publik file
-    const { data: urlData } = supabase.storage.from(bucket).getPublicUrl(fileName);
+    const { data: urlData } = supabase.storage
+      .from(bucket)
+      .getPublicUrl(fileName);
 
     return urlData.publicUrl;
   } catch (error) {
@@ -116,12 +132,16 @@ async function uploadBase64Image(base64String, bucket) {
     const fileName = `signature_${Date.now()}.png`;
 
     // Upload blob ke Supabase storage
-    const { data, error } = await supabase.storage.from(bucket).upload(fileName, blob);
+    const { data, error } = await supabase.storage
+      .from(bucket)
+      .upload(fileName, blob);
 
     if (error) throw error;
 
     // Dapatkan URL publik file
-    const { data: urlData } = supabase.storage.from(bucket).getPublicUrl(fileName);
+    const { data: urlData } = supabase.storage
+      .from(bucket)
+      .getPublicUrl(fileName);
 
     return urlData.publicUrl;
   } catch (error) {

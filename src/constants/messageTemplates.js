@@ -12,7 +12,7 @@ export const messageTemplates = [
   {
     title: "Casual Catch Up",
     template:
-      "Halo {nama dia},\n\nGimana kabarnya? Aku baru inget kita udah lama ga kontak. Aku harap kamu baik-baik aja ya. Kapan-kapan kita bisa ngobrol lebih lama lagi.\n\nMaaf kalau ada yang kurang pas, maafin aku yaa.\n\nBest regards,\n{nama kamu}",
+      "Halo {nama dia},\n\nGimana kabarnya? Aku baru inget kita udah lama ga kontak. Aku harap kamu baik-baik aja ya. Kapan-kapan kita bisa ngobrol lebih lama lagi.\n\nMaaf kalau ada yang kurang pas yaa.\n\nBest regards,\n{nama kamu}",
   },
   {
     title: "Playful Reminder",
@@ -22,7 +22,7 @@ export const messageTemplates = [
   {
     title: "Sincere Apology",
     template:
-      "Hai {nama dia},\n\nMaaf ya aku baru bisa ngabarin sekarang. Aku tau ini telat banget, tapi aku harap kamu bisa memaklumi aku. Aku lagi ada kesibukan yang lumayan padat nih.\n\nMaaf kalau ada yang kurang berkenan, maafin aku yaa.\n\nSalam hangat,\n{nama kamu}",
+      "Hai {nama dia},\n\nMaaf ya aku baru bisa ngabarin sekarang. Aku tau ini telat banget, tapi aku harap kamu bisa memaklumi aku. Aku lagi ada kesibukan yang lumayan padat nih.\n\nMaaf kalau ada yang kurang berkenan yaa.\n\nSalam hangat,\n{nama kamu}",
   },
   {
     title: "Friendly Check-in",
@@ -32,7 +32,7 @@ export const messageTemplates = [
   {
     title: "Light-hearted Missing",
     template:
-      "Hai {nama dia},\n\nKamu tau ga? Aku baru sadar kita udah lama ga ngobrol. Padahal dulu tiap hari update-an. Kamu sibuk apa aja nih? Aku penasaran banget!\n\nMaaf kalau ada yang kurang pas, maafin aku yaa.\n\nSalam hangat,\n{nama kamu}",
+      "Hai {nama dia},\n\nKamu tau ga? Aku baru sadar kita udah lama ga ngobrol. Padahal dulu tiap hari update-an. Kamu sibuk apa aja nih? Aku penasaran banget!\n\nMaaf kalau ada yang kurang pas yaa.\n\nSalam hangat,\n{nama kamu}",
   },
   {
     title: "Warm Greeting",
@@ -42,7 +42,7 @@ export const messageTemplates = [
   {
     title: "Casual Reminder",
     template:
-      "Hai {nama dia},\n\nUdah lama nih ga ketemu, jadi kangen sama canda tawa kamu. Aku udah siapin cerita lucu buat kamu, tapi kamu ga ada. Huhu, kapan kita bisa ngumpul lagi?\n\nMaaf kalau ada yang kurang, maafin aku yaa.\n\nSalam rindu,\n{nama kamu}",
+      "Hai {nama dia},\n\nUdah lama nih ga ketemu, jadi kangen sama canda tawa kamu. Aku udah siapin cerita lucu buat kamu, tapi kamu ga ada. Huhu, kapan kita bisa ngumpul lagi?\n\nMaaf kalau ada yang kurang fyaa.\n\nSalam rindu,\n{nama kamu}",
   },
   {
     title: "Friendly Update",

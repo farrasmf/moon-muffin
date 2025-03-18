@@ -191,8 +191,8 @@ export default function OrderPage() {
         name: formData.name,
         email: formData.email,
         whatsapp: formData.whatsapp,
-        memo: formData.memo,
-        message: formData.message,
+        namaPolaroid: formData.namaPolaroid,
+        pesan: formData.pesan,
       };
 
       updateCustomerInfo(customerInfo);
@@ -208,12 +208,13 @@ export default function OrderPage() {
         selectedFile,
         signatureImage,
         selectedTHR,
+        status: "created",
       });
 
       if (result.success) {
         toast.success("Pesanan berhasil dibuat!");
         // Redirect ke halaman summary
-        router.push("/summary");
+        router.push(`/order/${result.data.orderId}`);
       } else {
         toast.error(`Gagal membuat pesanan: ${result.error}`);
       }
@@ -450,7 +451,7 @@ export default function OrderPage() {
                         <h3 className="text-lg text-green-700 mb-3">
                           Pesanan {nomor}
                         </h3>
-                        <div className="space-y-2 text-sm">
+                        <div className="space-y-2 text-sm text-green-700">
                           <div className="flex justify-between">
                             <span>MoonMuffin Hampers x {jumlahItem} pcs</span>
                             <span>
@@ -477,7 +478,7 @@ export default function OrderPage() {
                   <div className="mt-6"></div>
                 </div>
               )}
-              <div className="flex justify-between text-xl font-bold pt-4 border-t">
+              <div className="flex justify-between text-xl font-bold pt-4 border-t text-green-700">
                 <span>Total</span>
                 <span>
                   Rp.{" "}

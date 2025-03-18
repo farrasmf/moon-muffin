@@ -61,10 +61,7 @@ export default function Header() {
         }`}
       >
         <div className="flex flex-col items-center justify-center h-full gap-[2svh]">
-          <Link
-            href="https://link.byc.plus/moonmuffin-ar"
-            onClick={() => setIsMenuOpen(false)}
-          >
+          <Link href="/experience-app" onClick={() => setIsMenuOpen(false)}>
             <button className="flex items-center gap-2 text-[3svh] px-4 py-2 rounded-full font-medium text-[#046511]">
               Experience App{" "}
               <svg
