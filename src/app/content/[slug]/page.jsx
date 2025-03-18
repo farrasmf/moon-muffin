@@ -279,10 +279,10 @@ export default function OrderPage() {
 
   // Tampilkan halaman utama jika order valid
   return (
-    <div className="min-h-screen bg-[#EDF0E7] pt-[15svh] pb-[10svh]">
+    <div className="min-h-screen bg-[#EDF0E7] pt-[20svh] pb-[10svh]">
       <div>
         <div className="w-full relative flex justify-center items-center">
-          <h1 className="text-5xl md:text-5xl font-medium text-green-700">
+          <h1 className="text-[3.5svh] md:text-[5.5svh] font-medium text-green-700">
             Record video & buat pesan mu!
           </h1>
         </div>
@@ -291,13 +291,14 @@ export default function OrderPage() {
           <div className="w-full mt-4 px-4 sm:px-8 md:px-56">
             <div className="flex flex-col justify-center items-center text-center">
               <h2 className="text-xl text-green-700 mb-3">Yang udah upload:</h2>
-              <div className="flex flex-wrap gap-2 justify-center">
+              <div className="flex flex-wrap gap-2 justify-center items-center">
                 {contentNames.map((content, index) => (
                   <span
                     key={index}
                     className="font-['OtherHand'] text-green-700 text-[5svh]"
                   >
-                    {content.name},{" "}
+                    {content.name}
+                    {index !== contentNames.length - 1 ? ", " : ""}
                   </span>
                 ))}
               </div>
