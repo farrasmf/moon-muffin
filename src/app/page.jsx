@@ -208,6 +208,15 @@ export default function Home() {
         </div>
       </div>
       {/* Carousel Section End */}
+      <div className="min-w-screen px-[10svw] pt-[10svh]">
+        <div className="w-full relative flex justify-center items-center overflow-hidden rounded-3xl">
+          <img
+            src="/assets/images/muffin-details.png"
+            className="w-auto h-auto max-h-[80svh]"
+            alt="image"
+          />
+        </div>
+      </div>
 
       {/* Descreption Section Start */}
       <div className="flex-col flex justify-center item-center gap-8 md:my-[18svh] my-[10svh]">
@@ -339,13 +348,34 @@ export default function Home() {
         {/* Paragraph 3 End */}
       </div>
 
-      <div className="min-w-screen px-[10svw]">
-        <div className="w-full relative flex justify-center items-center overflow-hidden rounded-3xl">
-          <img
-            src="/assets/images/ar-illustration.png"
-            className="w-full h-auto"
-            alt="image"
-          />
+      <div className="min-w-screen px-[10svw] flex justify-center items-center">
+        <div className="w-full flex flex-col md:flex-row justify-center items-center gap-4">
+          <div className=" w-fit relative flex justify-center items-center overflow-hidden rounded-3xl shadow-lg">
+            <video
+              src="/assets/videos/how_to_order.mp4"
+              className="h-[80svh] w-auto "
+              controls
+              // autoPlay
+              // muted
+              // loop
+            />
+          </div>
+          <div className=" max-w-[84svw] md:max-w-[40svw] w-fit flex flex-row md:flex-col gap-4 md:h-[70svh]">
+            <div className=" relative flex flex-1 justify-center items-center overflow-hidden rounded-3xl">
+              <img
+                src="/assets/images/ar-illustration.png"
+                className="w-full h-full object-cover"
+                alt="AR illustration 1"
+              />
+            </div>
+            <div className=" relative flex flex-1 justify-center items-center overflow-hidden rounded-3xl">
+              <img
+                src="/assets/images/muffin-illustration.png"
+                className="w-full h-full object-cover"
+                alt="AR illustration 2"
+              />
+            </div>
+          </div>
         </div>
       </div>
       {/* Descreption Section End */}
