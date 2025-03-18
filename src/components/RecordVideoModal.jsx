@@ -27,7 +27,10 @@ export default function RecordVideoModal({ isOpen, onClose, onSave }) {
           aspectRatio: { ideal: 9 / 16 },
           facingMode: "user",
         },
-        audio: true,
+        audio: {
+          echoCancellation: true,
+          noiseSuppression: true,
+        },
       });
       videoRef.current.srcObject = stream;
       streamRef.current = stream;
@@ -51,9 +54,18 @@ export default function RecordVideoModal({ isOpen, onClose, onSave }) {
   const startRecording = () => {
     if (streamRef.current) {
       setRecordedChunks([]);
-      mediaRecorderRef.current = new MediaRecorder(streamRef.current, {
-        mimeType: "video/webm;codecs=vp8,opus",
-      });
+      const mimeType = MediaRecorder.isTypeSupported(
+        "video/webm;codecs=vp8,opus"
+      )
+        ? "video/webm;codecs=vp8,opus"
+        : "video/webm";
+
+      const options = {
+        mimeType,
+        audioBitsPerSecond: 128000,
+      };
+
+      mediaRecorderRef.current = new MediaRecorder(streamRef.current, options);
       mediaRecorderRef.current.ondataavailable = (event) => {
         if (event.data.size > 0) {
           setRecordedChunks((prev) => [...prev, event.data]);

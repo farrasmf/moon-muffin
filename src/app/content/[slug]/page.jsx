@@ -113,8 +113,8 @@ export default function OrderPage() {
     setRecordedVideo(videoUrl);
 
     // Konversi blob ke File
-    const file = new File([videoBlob], `video_${Date.now()}.webm`, {
-      type: "video/webm",
+    const file = new File([videoBlob], `video_${Date.now()}.mp4`, {
+      type: "video/mp4",
     });
     setVideoFile(file);
   };
