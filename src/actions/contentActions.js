@@ -52,8 +52,8 @@ export async function saveContent(formData, orderId) {
     const videoFile = formData.get("video");
     const signatureBase64 = formData.get("signature");
 
-    if (!name || !message || !videoFile || !signatureBase64) {
-      throw new Error("Semua field harus diisi");
+    if (!name || !message || !videoFile) {
+      throw new Error("Nama, pesan, dan video harus diisi");
     }
 
     // Upload video ke Supabase Storage dengan progress
@@ -61,10 +61,13 @@ export async function saveContent(formData, orderId) {
     const videoUrl = await uploadFile(videoFile, "contents");
     console.log("Video uploaded successfully");
 
-    // Upload signature (base64) ke Supabase Storage
-    console.log("Uploading signature...");
-    const signatureUrl = await uploadBase64Image(signatureBase64, "contents");
-    console.log("Signature uploaded successfully");
+    // Upload signature (base64) ke Supabase Storage jika ada
+    let signatureUrl = null;
+    if (signatureBase64) {
+      console.log("Uploading signature...");
+      signatureUrl = await uploadBase64Image(signatureBase64, "contents");
+      console.log("Signature uploaded successfully");
+    }
 
     // Simpan data ke tabel contents
     console.log("Saving data to database...");
@@ -146,8 +149,12 @@ async function uploadFile(file, bucket) {
  */
 async function uploadBase64Image(base64String, bucket) {
   try {
+    if (!base64String) return null;
+
     // Konversi base64 string ke blob
     const base64Data = base64String.split(",")[1];
+    if (!base64Data) return null;
+
     const byteCharacters = atob(base64Data);
     const byteArrays = [];
 
@@ -176,6 +183,6 @@ async function uploadBase64Image(base64String, bucket) {
     return urlData.publicUrl;
   } catch (error) {
     console.error("Error uploading base64 image:", error);
-    throw error;
+    return null;
   }
 }

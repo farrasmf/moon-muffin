@@ -92,9 +92,6 @@ export default function OrderPage() {
     if (!message.trim()) {
       newErrors.message = "Pesannya tolong diisi yaa!";
     }
-    if (!signature) {
-      newErrors.signature = "Tanda tangannya tolong diisi yaa!";
-    }
 
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
@@ -154,9 +151,6 @@ export default function OrderPage() {
     if (!message.trim()) {
       newErrors.message = "Pesannya tolong diisi yaa!";
     }
-    if (!signature) {
-      newErrors.signature = "Tanda tangannya tolong diisi yaa!";
-    }
 
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
@@ -170,7 +164,9 @@ export default function OrderPage() {
       const formData = new FormData();
       formData.append("nama", name);
       formData.append("pesan", message);
-      formData.append("signature", signature);
+      if (signature) {
+        formData.append("signature", signature);
+      }
       formData.append("video", videoFile);
       formData.append("consent", agreeToDisplay ? "1" : "0");
 
@@ -250,7 +246,7 @@ export default function OrderPage() {
   // Tampilkan success state jika berhasil
   if (isSuccess) {
     return (
-      <div className="min-h-screen bg-[#EDF0E7] flex flex-col items-center justify-center gap-4">
+      <div className="min-h-screen bg-[#EDF0E7] flex flex-col items-center justify-center gap-4 px-[8svw]">
         <div className="text-center">
           <h1 className="text-[3.6svh] text-green-700 mb-4">
             Pesan kamu berhasil disimpan! 🎉
@@ -281,7 +277,7 @@ export default function OrderPage() {
   return (
     <div className="min-h-screen bg-[#EDF0E7] pt-[20svh] pb-[10svh]">
       <div>
-        <div className="w-full relative flex justify-center items-center">
+        <div className="w-full relative flex justify-center items-center px-[8svw] text-center">
           <h1 className="text-[3.5svh] md:text-[5.5svh] font-medium text-green-700">
             Record video & buat pesan mu!
           </h1>

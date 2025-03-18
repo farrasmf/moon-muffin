@@ -113,7 +113,7 @@ export default function RecordVideoModal({ isOpen, onClose, onSave }) {
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 ">
-      <div className="bg-white rounded-xl p-6 max-w-4xl w-auto mx-4 max-h-[80svh] min-w-[50svh]">
+      <div className="bg-white rounded-xl p-6 max-w-4xl w-auto mx-4 md:max-h-[80svh] md:min-w-[50svh]">
         <div className="flex justify-between items-center mb-4">
           <h2 className="text-[2.2svh] font-semibold text-green-700">
             Rekam Video
@@ -139,7 +139,7 @@ export default function RecordVideoModal({ isOpen, onClose, onSave }) {
         </div>
 
         <div className="flex flex-col items-center gap-4 h-full">
-          <div className="relative w-[calc((75svh-8rem)*9/16)] h-[calc(75svh-8rem)] bg-gray-100 rounded-xl overflow-hidden">
+          <div className="relative w-[calc((75svh-8rem)*9/16)] min-h-[calc(75svh-8rem)] h-fit bg-gray-100 rounded-xl overflow-hidden">
             {recordedVideoUrl ? (
               <video
                 src={recordedVideoUrl}
@@ -156,7 +156,7 @@ export default function RecordVideoModal({ isOpen, onClose, onSave }) {
             )}
           </div>
 
-          <div className="flex gap-4">
+          <div className="flex gap-4 w-full justify-center">
             {!isRecording && !recordedVideoUrl ? (
               <button
                 onClick={startRecording}
@@ -172,16 +172,16 @@ export default function RecordVideoModal({ isOpen, onClose, onSave }) {
                 <div className="h-[3svh] w-[3svh] bg-[#92ed00] rounded-[0.3rem] transition-all duration-300 ease-in-out" />
               </button>
             ) : (
-              <div className="flex gap-2">
+              <div className="flex flex-col md:flex-row gap-2 w-full">
                 <button
                   onClick={retryRecording}
-                  className="bg-gray-600 w-[20svh] px-6 py-3 rounded-full font-medium text-[2svh] flex-1 text-white hover:bg-gray-700 transition-colors"
+                  className="bg-gray-600 min-w-[20svh] w-full px-6 py-3 rounded-full font-medium text-[2svh] flex-1 text-white hover:bg-gray-700 transition-colors"
                 >
                   Take Ulang
                 </button>
                 <button
                   onClick={saveRecording}
-                  className="bg-green-700 w-[20svh] px-6 py-3 rounded-full font-medium text-[2svh] flex-1 text-white hover:bg-green-800 transition-colors"
+                  className="bg-green-700 min-w-[20svh] w-full  px-6 py-3 rounded-full font-medium text-[2svh] flex-1 text-white hover:bg-green-800 transition-colors"
                 >
                   Simpan
                 </button>
