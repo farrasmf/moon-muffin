@@ -34,10 +34,18 @@ export default function OrderPage() {
   useEffect(() => {
     async function fetchContentNames() {
       try {
-        const response = await fetch(`/api/gallery?orderId=${orderId}`);
+        console.log("Fetching content names for orderId:", orderId);
+        const response = await fetch(
+          `https://moonmuffin.byc.plus/api/gallery?orderId=${orderId}`
+        );
+        console.log("Gallery API response:", response);
         const result = await response.json();
+        console.log("Gallery API result:", result);
         if (result.data) {
+          console.log("Setting content names:", result.data);
           setContentNames(result.data);
+        } else {
+          console.log("No data in result");
         }
       } catch (error) {
         console.error("Error fetching content names:", error);
@@ -45,7 +53,10 @@ export default function OrderPage() {
     }
 
     if (isOrderValid) {
+      console.log("Order is valid, fetching content names");
       fetchContentNames();
+    } else {
+      console.log("Order is not valid, skipping content names fetch");
     }
   }, [orderId, isOrderValid]);
 
