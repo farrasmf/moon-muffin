@@ -449,6 +449,9 @@ export default function Home() {
           </div>
         </p>
         <p className="md:text-[4svh] text-[2.4svh] text-center">
+          <b>IDR 169.000</b> untuk satu box berisi <b>3 muffin dan aksesoris</b>
+          .
+          <br />
           Jadi, siapa yang mau kamu kirimin muffin hari ini?
         </p>
         <div className="w-full relative flex justify-center items-center mt-[5svh]">
