@@ -74,7 +74,7 @@ export default function SummaryPage() {
             <Link href="/create-order">
               <button className="px-6 py-4 rounded-full font-medium text-xl text-[#046511] border-2 border-[#046511]">Kembali</button>
             </Link>
-            <Link href="/payment">
+            <Link href="/payment-success">
               <button className="bg-[#92ED00] px-6 py-4 rounded-full font-medium text-xl text-[#046511]">Proses Pembayaran</button>
             </Link>
           </div>

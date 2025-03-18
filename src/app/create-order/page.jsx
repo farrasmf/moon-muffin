@@ -7,6 +7,8 @@ import Pesanan from "@/components/OrderForm/Pesanan";
 import { dummyProvinces } from "@/data/locationData";
 import { useRouter } from "next/navigation";
 import { useOrder } from "@/context/OrderContext";
+import { createOrder } from "@/actions/orderActions";
+import { toast } from "react-hot-toast";
 
 export default function OrderPage() {
   const router = useRouter();
@@ -17,6 +19,7 @@ export default function OrderPage() {
   const [selectedFile, setSelectedFile] = useState(orderData.selectedFile || null);
   const [signatureImage, setSignatureImage] = useState(orderData.signatureImage || null);
   const [provinces] = useState(dummyProvinces);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const [formData, setFormData] = useState({
     name: orderData.customerInfo?.name || "",
@@ -70,25 +73,48 @@ export default function OrderPage() {
     }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    setIsSubmitting(true);
 
-    // Update context data
-    updateCustomerInfo({
-      name: formData.name,
-      email: formData.email,
-      whatsapp: formData.whatsapp,
-      memo: formData.memo,
-      message: formData.message,
-    });
+    try {
+      // Update context data
+      const customerInfo = {
+        name: formData.name,
+        email: formData.email,
+        whatsapp: formData.whatsapp,
+        memo: formData.memo,
+        message: formData.message,
+      };
 
-    updatePesanan(formData.pesanan);
-    updateSelectedTHR(selectedTHR);
-    updateFile(selectedFile);
-    updateSignature(signatureImage);
+      updateCustomerInfo(customerInfo);
+      updatePesanan(formData.pesanan);
+      updateSelectedTHR(selectedTHR);
+      updateFile(selectedFile);
+      updateSignature(signatureImage);
 
-    // Redirect ke halaman summary
-    router.push("/summary");
+      // Kirim data ke Supabase
+      const result = await createOrder({
+        customerInfo,
+        pesanan: formData.pesanan,
+        selectedFile,
+        signatureImage,
+        selectedTHR,
+      });
+
+      if (result.success) {
+        toast.success("Pesanan berhasil dibuat!");
+        // Redirect ke halaman summary
+        router.push("/summary");
+      } else {
+        toast.error(`Gagal membuat pesanan: ${result.error}`);
+      }
+    } catch (error) {
+      console.error("Error saat memproses pesanan:", error);
+      toast.error(`Terjadi kesalahan: ${error.message}`);
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const addPesanan = () => {
@@ -179,8 +205,8 @@ export default function OrderPage() {
             </div>
 
             <div className="flex justify-center items-center mt-8">
-              <button type="submit" className="bg-[#92ED00] px-[4svh] py-[2svh] rounded-full font-medium text-[2.8svh] text-[#046511]">
-                Selanjutnya
+              <button type="submit" className="bg-[#92ED00] px-[4svh] py-[2svh] rounded-full font-medium text-[2.8svh] text-[#046511] disabled:opacity-70 disabled:cursor-not-allowed" disabled={isSubmitting}>
+                {isSubmitting ? "Memproses..." : "Selanjutnya"}
               </button>
             </div>
           </form>
