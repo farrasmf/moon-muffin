@@ -9,10 +9,11 @@ import { useRouter } from "next/navigation";
 import { useOrder } from "@/context/OrderContext";
 import { createOrder } from "@/actions/orderActions";
 import { toast } from "react-hot-toast";
+import { getDeliveryQuotation } from "@/utils/lalamoveApi";
 
 export default function OrderPage() {
   const router = useRouter();
-  const { orderData, updateCustomerInfo, updatePesanan, updateSelectedTHR, updateFile, updateSignature } = useOrder();
+  const { orderData, updateCustomerInfo, updatePesanan, updateSelectedTHR, updateFile, updateSignature, updateDeliveryQuotations } = useOrder();
 
   const [pesananList, setPesananList] = useState([1]);
   const [selectedTHR, setSelectedTHR] = useState(orderData.selectedTHR || {});
@@ -20,6 +21,7 @@ export default function OrderPage() {
   const [signatureImage, setSignatureImage] = useState(orderData.signatureImage || null);
   const [provinces] = useState(dummyProvinces);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [deliveryQuotations, setDeliveryQuotations] = useState({});
 
   const [formData, setFormData] = useState({
     name: orderData.customerInfo?.name || "",
@@ -66,11 +68,71 @@ export default function OrderPage() {
     }));
   };
 
-  const handlePesananChange = (nomor, field, value) => {
-    setFormData((prev) => ({
-      ...prev,
-      pesanan: prev.pesanan.map((item) => (item.nomor === nomor ? { ...item, [field]: value } : item)) || [],
-    }));
+  const getDeliveryCost = async (pesanan) => {
+    try {
+      // Format stops untuk API Lalamove
+      const stops = [
+        {
+          // Koordinat pickup (gudang/toko)
+          coordinates: {
+            lat: parseFloat(process.env.NEXT_PUBLIC_STORE_LAT),
+            lng: parseFloat(process.env.NEXT_PUBLIC_STORE_LNG),
+          },
+          address: process.env.NEXT_PUBLIC_STORE_ADDRESS,
+        },
+        {
+          // Koordinat delivery (alamat penerima)
+          coordinates: {
+            lat: parseFloat(pesanan.latitude),
+            lng: parseFloat(pesanan.longitude),
+          },
+          address: `${pesanan.alamat}, ${pesanan.kelurahan}, ${pesanan.kecamatan}, ${pesanan.kota}, ${pesanan.provinsi} ${pesanan.kodePos}`,
+        },
+      ];
+
+      const quotation = await getDeliveryQuotation(stops);
+
+      // Cek apakah respon sesuai format yang diharapkan
+      if (quotation && quotation.data && quotation.data.priceBreakdown) {
+        return quotation.data.priceBreakdown.total;
+      } else {
+        console.error("Unexpected quotation format:", quotation);
+        return null;
+      }
+    } catch (error) {
+      console.error("Error getting delivery cost:", error);
+      return null;
+    }
+  };
+
+  const handlePesananChange = async (nomor, field, value) => {
+    setFormData((prev) => {
+      const updatedPesanan = prev.pesanan.map((item) => (item.nomor === nomor ? { ...item, [field]: value } : item));
+
+      // Jika semua data alamat sudah terisi, dapatkan biaya pengiriman
+      const currentPesanan = updatedPesanan.find((p) => p.nomor === nomor);
+      console.log(currentPesanan);
+      if (currentPesanan && currentPesanan.latitude && currentPesanan.longitude && currentPesanan.alamat && currentPesanan.kelurahan && currentPesanan.kecamatan && currentPesanan.kota && currentPesanan.provinsi && currentPesanan.kodePos) {
+        getDeliveryCost(currentPesanan).then((cost) => {
+          if (cost) {
+            setDeliveryQuotations((prev) => {
+              const updatedQuotations = {
+                ...prev,
+                [nomor]: cost,
+              };
+              // Update context
+              updateDeliveryQuotations(updatedQuotations);
+              return updatedQuotations;
+            });
+          }
+        });
+      }
+
+      return {
+        ...prev,
+        pesanan: updatedPesanan,
+      };
+    });
   };
 
   const handleSubmit = async (e) => {
@@ -92,6 +154,7 @@ export default function OrderPage() {
       updateSelectedTHR(selectedTHR);
       updateFile(selectedFile);
       updateSignature(signatureImage);
+      updateDeliveryQuotations(deliveryQuotations);
 
       // Kirim data ke Supabase
       const result = await createOrder({
@@ -100,6 +163,7 @@ export default function OrderPage() {
         selectedFile,
         signatureImage,
         selectedTHR,
+        deliveryQuotations,
       });
 
       if (result.success) {

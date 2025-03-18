@@ -10,9 +10,8 @@ export default function SummaryPage() {
   const { orderData, calculateTotal } = useOrder();
   const [pesananList, setPesananList] = useState([]);
 
-  // Harga item dan biaya pengiriman
-  const hargaPerItem = 50000; 
-  const biayaPengiriman = 10000; 
+  // Harga item
+  const hargaPerItem = 50000;
 
   useEffect(() => {
     // Cek apakah ada data pesanan, kalau tidak redirect ke create-order
@@ -26,8 +25,8 @@ export default function SummaryPage() {
       nomor: item.nomor,
       jumlahItem: parseInt(item.jumlahItem) || 0,
       hargaItem: hargaPerItem,
-      THR: parseInt(orderData.selectedTHR[item.nomor]) || 0,
-      biayaPengiriman: biayaPengiriman,
+      THR: parseInt(orderData.selectedTHR?.[item.nomor]) || 0,
+      biayaPengiriman: (orderData.deliveryQuotations && orderData.deliveryQuotations[item.nomor]) || 0,
       namaPenerima: item.namaPenerima,
       alamatPengiriman: `${item.alamat}, ${item.kelurahan}, ${item.kecamatan}, ${item.kota}, ${item.provinsi} ${item.kodePos}`,
     }));

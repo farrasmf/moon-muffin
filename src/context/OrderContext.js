@@ -2,72 +2,82 @@
 
 import { createContext, useContext, useState } from "react";
 
-const OrderContext = createContext(undefined);
+const OrderContext = createContext();
 
 export function OrderProvider({ children }) {
   const [orderData, setOrderData] = useState({
-    customerInfo: {
-      name: "",
-      email: "",
-      whatsapp: "",
-      memo: "",
-      message: "",
-    },
+    customerInfo: null,
+    pesanan: [],
     selectedTHR: {},
     selectedFile: null,
     signatureImage: null,
-    pesanan: [],
+    deliveryQuotations: {},
   });
+
+  const updateCustomerInfo = (customerInfo) => {
+    setOrderData((prev) => ({
+      ...prev,
+      customerInfo,
+    }));
+  };
+
+  const updatePesanan = (pesanan) => {
+    setOrderData((prev) => ({
+      ...prev,
+      pesanan,
+    }));
+  };
+
+  const updateSelectedTHR = (selectedTHR) => {
+    setOrderData((prev) => ({
+      ...prev,
+      selectedTHR,
+    }));
+  };
+
+  const updateFile = (file) => {
+    setOrderData((prev) => ({
+      ...prev,
+      selectedFile: file,
+    }));
+  };
+
+  const updateSignature = (signature) => {
+    setOrderData((prev) => ({
+      ...prev,
+      signatureImage: signature,
+    }));
+  };
+
+  const updateDeliveryQuotations = (quotations) => {
+    setOrderData((prev) => ({
+      ...prev,
+      deliveryQuotations: quotations,
+    }));
+  };
+
+  const calculateTotal = () => {
+    if (!orderData.pesanan) return 0;
+
+    return orderData.pesanan.reduce((total, item) => {
+      const hargaItem = 50000 * (parseInt(item.jumlahItem) || 0);
+      const thr = parseInt(orderData.selectedTHR[item.nomor]) || 0;
+      const biayaPengiriman = orderData.deliveryQuotations[item.nomor] || 0;
+      return total + hargaItem + thr + biayaPengiriman;
+    }, 0);
+  };
 
   return (
     <OrderContext.Provider
       value={{
         orderData,
-        setOrderData,
-        updateCustomerInfo: (info) => {
-          setOrderData((prev) => ({
-            ...prev,
-            customerInfo: {
-              ...prev.customerInfo,
-              ...info,
-            },
-          }));
-        },
-        updatePesanan: (pesanan) => {
-          setOrderData((prev) => ({
-            ...prev,
-            pesanan,
-          }));
-        },
-        updateSelectedTHR: (THR) => {
-          setOrderData((prev) => ({
-            ...prev,
-            selectedTHR: THR,
-          }));
-        },
-        updateFile: (file) => {
-          setOrderData((prev) => ({
-            ...prev,
-            selectedFile: file,
-          }));
-        },
-        updateSignature: (signature) => {
-          setOrderData((prev) => ({
-            ...prev,
-            signatureImage: signature,
-          }));
-        },
-        calculateTotal: () => {
-          const biayaPerItem = 50000; // Harga per item Moon Muffin
-          const biayaPengiriman = 10000; // Biaya pengiriman standar
-
-          return orderData.pesanan.reduce((total, item) => {
-            const itemQuantity = parseInt(item.jumlahItem) || 0;
-            const THR = orderData.selectedTHR[item.nomor] || 0;
-
-            return total + itemQuantity * biayaPerItem + THR + biayaPengiriman;
-          }, 0);
-        },
+        updateCustomerInfo,
+        updatePesanan,
+        updateSelectedTHR,
+        updateFile,
+        updateSignature,
+        updateDeliveryQuotations,
+        calculateTotal,
       }}
     >
       {children}
@@ -77,7 +87,7 @@ export function OrderProvider({ children }) {
 
 export function useOrder() {
   const context = useContext(OrderContext);
-  if (context === undefined) {
+  if (!context) {
     throw new Error("useOrder must be used within an OrderProvider");
   }
   return context;
