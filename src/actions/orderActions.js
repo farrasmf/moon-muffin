@@ -28,6 +28,7 @@ export async function createOrder(orderData) {
           ? await uploadBase64Image(signatureImage, "signatures")
           : null,
         message: customerInfo.message,
+        delivery_date: customerInfo.delivery_date,
         status: "created",
       })
       .select()

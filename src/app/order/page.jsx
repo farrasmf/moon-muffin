@@ -40,6 +40,7 @@ export default function OrderPage() {
     whatsapp: orderData.customerInfo?.whatsapp || "",
     memo: orderData.customerInfo?.memo || "",
     message: orderData.customerInfo?.message || "",
+    delivery_date: orderData.customerInfo?.delivery_date || "",
     pesanan: [],
   });
 
@@ -108,6 +109,10 @@ export default function OrderPage() {
     }
     if (!formData.whatsapp.trim()) {
       newErrors.whatsapp = "Nomor WhatsApp harus diisi";
+      hasError = true;
+    }
+    if (!formData.delivery_date) {
+      newErrors.delivery_date = "Tanggal pengiriman harus dipilih";
       hasError = true;
     }
 
@@ -192,7 +197,9 @@ export default function OrderPage() {
         email: formData.email,
         whatsapp: formData.whatsapp,
         namaPolaroid: formData.namaPolaroid,
-        pesan: formData.pesan,
+        caption: formData.memo,
+        message: formData.pesan,
+        delivery_date: formData.delivery_date,
       };
 
       updateCustomerInfo(customerInfo);
