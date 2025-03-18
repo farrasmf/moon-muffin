@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import SignatureInput from "@/components/SignatureInput";
 import Message from "@/components/Message";
 import { toast } from "react-hot-toast";
+import { messageTemplates } from "@/constants/messageTemplates";
 
 const AccessoryDetails = ({
   formData,
@@ -33,6 +34,19 @@ const AccessoryDetails = ({
 
   const handleClosePreview = () => {
     setIsPreviewOpen(false);
+  };
+
+  const handleTemplateSelect = () => {
+    const randomTemplate =
+      messageTemplates[Math.floor(Math.random() * messageTemplates.length)];
+    const message = randomTemplate.template;
+
+    handleInputChange({
+      target: {
+        name: "pesan",
+        value: message,
+      },
+    });
   };
 
   return (
@@ -129,11 +143,18 @@ const AccessoryDetails = ({
             onChange={handleInputChange}
             placeholder="Masukan pesan yang akan dicetak di polaroid"
             required
-            rows={3}
+            rows={10}
           />
           {errors?.pesan && (
             <p className="text-red-500 text-sm mt-1">{errors.pesan}</p>
           )}
+          <button
+            type="button"
+            onClick={handleTemplateSelect}
+            className="w-fit bg-[#046511] text-white px-4 py-2 rounded-full font-medium md:text-[2.2svh] text-[1.8svh] hover:bg-[#03540d] transition-colors mt-2"
+          >
+            Coba Template
+          </button>
         </div>
 
         <SignatureInput onSave={onSaveSignature} />
@@ -142,7 +163,7 @@ const AccessoryDetails = ({
           <button
             type="button"
             onClick={handleOpenPreview}
-            className="flex items-center gap-2 bg-transparent border-2 border-gray-500 px-4 py-2 rounded-full font-medium md:text-[2.6svh] text-[2.2svh] text-green-700 hover:bg-green-700 hover:text-white transition-colors group"
+            className="flex items-center gap-2 bg-transparent border-2 border-green-700 px-4 py-2 rounded-full font-medium md:text-[2.2svh] text-[1.8svh] text-green-700 hover:bg-green-700 hover:text-white transition-colors group"
           >
             Preview
             <svg
