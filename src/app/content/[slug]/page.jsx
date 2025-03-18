@@ -323,10 +323,13 @@ export default function OrderPage() {
                     <div className="flex justify-center">
                       <button
                         type="button"
-                        onClick={handleOpenModal}
+                        onClick={() => {
+                          setRecordedVideo(null);
+                          setVideoFile(null);
+                        }}
                         className="bg-gray-200 px-6 py-3 rounded-full font-medium text-[2.2svh] text-gray-700"
                       >
-                        Ganti Video
+                        Hapus Video
                       </button>
                     </div>
                   </div>
