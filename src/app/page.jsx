@@ -353,11 +353,9 @@ export default function Home() {
           <div className=" w-fit relative flex justify-center items-center overflow-hidden rounded-3xl shadow-lg">
             <video
               src="/assets/videos/how_to_order.mp4"
-              className="h-[80svh] w-auto "
+              className="h-[80svh] w-auto"
               controls
-              // autoPlay
-              // muted
-              // loop
+              preload="metadata"
             />
           </div>
           <div className=" max-w-[84svw] md:max-w-[40svw] w-fit flex flex-row md:flex-col gap-4 md:h-[70svh]">

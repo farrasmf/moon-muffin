@@ -8,6 +8,7 @@ import { dummyProvinces } from "@/data/locationData";
 import { useRouter } from "next/navigation";
 import { useOrder } from "@/context/OrderContext";
 import { createOrder } from "@/actions/orderActions";
+import { createPaymentRequest } from "@/actions/xenditActions";
 import { toast } from "react-hot-toast";
 
 export default function OrderPage() {
@@ -191,40 +192,65 @@ export default function OrderPage() {
         return;
       }
 
-      // Update context data
-      const customerInfo = {
-        name: formData.name,
-        email: formData.email,
-        whatsapp: formData.whatsapp,
-        namaPolaroid: formData.namaPolaroid,
-        caption: formData.memo,
-        message: formData.pesan,
-        delivery_date: formData.delivery_date,
+      // Calculate total amount
+      const totalAmount = pesananList.reduce((total, nomor) => {
+        const pesanan = formData.pesanan.find((p) => p.nomor === nomor);
+        const jumlahItem = parseInt(pesanan?.jumlahItem) || 0;
+        const hargaPerItem = 169000;
+        const biayaPengiriman = 10000;
+        const thr = parseInt(selectedTHR[nomor]) || 0;
+        return total + jumlahItem * hargaPerItem + thr + biayaPengiriman;
+      }, 0);
+
+      // Create order data
+      const orderData = {
+        customerInfo: {
+          name: formData.name,
+          email: formData.email,
+          whatsapp: formData.whatsapp,
+          namaPolaroid: formData.namaPolaroid,
+          caption: formData.memo,
+          message: formData.pesan,
+          delivery_date: formData.delivery_date,
+        },
+        pesanan: formData.pesanan,
+        selectedFile,
+        signatureImage,
+        selectedTHR,
+        status: "pending",
       };
 
-      updateCustomerInfo(customerInfo);
+      // Create Xendit payment request
+      const paymentResult = await createPaymentRequest({
+        // amount: totalAmount,
+        amount: 10000,
+        orderId: Date.now().toString(), // Temporary order ID
+        customerInfo: orderData.customerInfo,
+      });
+
+      if (!paymentResult.success) {
+        console.error("Payment request failed:", paymentResult.details);
+        toast.error(
+          `Gagal membuat pembayaran: ${paymentResult.error}${
+            paymentResult.details
+              ? ` (${JSON.stringify(paymentResult.details)})`
+              : ""
+          }`
+        );
+        setIsSubmitting(false);
+        return;
+      }
+
+      // Update context data
+      updateCustomerInfo(orderData.customerInfo);
       updatePesanan(formData.pesanan);
       updateSelectedTHR(selectedTHR);
       updateFile(selectedFile);
       updateSignature(signatureImage);
 
-      // Kirim data ke Supabase
-      const result = await createOrder({
-        customerInfo,
-        pesanan: formData.pesanan,
-        selectedFile,
-        signatureImage,
-        selectedTHR,
-        status: "created",
-      });
-
-      if (result.success) {
-        toast.success("Pesanan berhasil dibuat!");
-        // Redirect ke halaman summary
-        router.push(`/order/${result.data.orderId}`);
-      } else {
-        toast.error(`Gagal membuat pesanan: ${result.error}`);
-      }
+      // Redirect to payment page
+      toast.success("Pesanan berhasil dibuat! Silakan lakukan pembayaran.");
+      router.push(`/payment/${paymentResult.data.id}`);
     } catch (error) {
       console.error("Error saat memproses pesanan:", error);
       toast.error(`Terjadi kesalahan: ${error.message}`);
