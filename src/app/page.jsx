@@ -1,6 +1,6 @@
 "use client";
 
-import Polaroid from "@/components/Polaroid";
+import PhotoPolaroid from "@/components/PhotoPolaroid";
 import Image from "next/image";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay } from "swiper/modules";
@@ -64,8 +64,14 @@ export default function Home() {
         </button> */}
       </div>
 
-      <div className="flex justify-center">
-        <Image src={"/assets/images/muffin-placeholder.png"} priority width={1200} height={1000} alt="image" />
+      <div className="flex justify-center mt-[3svh]">
+        <Image
+          src={"/assets/images/muffin-hero.png"}
+          priority
+          width={700}
+          height={700}
+          alt="image"
+        />
       </div>
 
       {/* Carousel Section Start */}
@@ -136,7 +142,7 @@ export default function Home() {
                     }deg)`,
                   }}
                 >
-                  <Polaroid imageURL={item.image} name={item.name} />
+                  <PhotoPolaroid imageURL={item.image} name={item.name} />
                 </div>
               </SwiperSlide>
             ))}
@@ -166,7 +172,7 @@ export default function Home() {
                     }deg)`,
                   }}
                 >
-                  <Polaroid imageURL={item.image} name={item.name} />
+                  <PhotoPolaroid imageURL={item.image} name={item.name} />
                 </div>
               </SwiperSlide>
             ))}
@@ -180,7 +186,7 @@ export default function Home() {
             </button>
           </Link>
 
-          <Link href={"/create-order"}>
+          <Link href={"/order"}>
             {" "}
             <button className="text-[2svh] md:text-[2.2svh] bg-[#92ED00] flex items-center gap-1 px-4 py-2 rounded-full font-medium text-[#046511]">
               Pesan Sekarang!
@@ -202,6 +208,15 @@ export default function Home() {
         </div>
       </div>
       {/* Carousel Section End */}
+      <div className="min-w-screen px-[10svw] pt-[10svh]">
+        <div className="w-full relative flex justify-center items-center overflow-hidden rounded-3xl">
+          <img
+            src="/assets/images/muffin-details.png"
+            className="w-auto h-auto max-h-[80svh]"
+            alt="image"
+          />
+        </div>
+      </div>
 
       {/* Descreption Section Start */}
       <div className="flex-col flex justify-center item-center gap-8 md:my-[18svh] my-[10svh]">
@@ -333,13 +348,32 @@ export default function Home() {
         {/* Paragraph 3 End */}
       </div>
 
-      <div className="min-w-screen px-[10svw]">
-        <div className="w-full relative flex justify-center items-center overflow-hidden rounded-3xl">
-          <img
-            src="/assets/images/ar-illustration.png"
-            className="w-full h-auto"
-            alt="image"
-          />
+      <div className="min-w-screen px-[10svw] flex justify-center items-center">
+        <div className="w-full flex flex-col md:flex-row justify-center items-center gap-4">
+          <div className=" w-fit relative flex justify-center items-center overflow-hidden rounded-3xl shadow-lg">
+            <video
+              src="/assets/videos/how_to_order.mp4"
+              className="h-[80svh] w-auto"
+              controls
+              preload="metadata"
+            />
+          </div>
+          <div className=" max-w-[84svw] md:max-w-[40svw] w-fit flex flex-row md:flex-col gap-4 md:h-[70svh]">
+            <div className=" relative flex flex-1 justify-center items-center overflow-hidden rounded-3xl">
+              <img
+                src="/assets/images/ar-illustration.png"
+                className="w-full h-full object-cover"
+                alt="AR illustration 1"
+              />
+            </div>
+            <div className=" relative flex flex-1 justify-center items-center overflow-hidden rounded-3xl">
+              <img
+                src="/assets/images/muffin-illustration.png"
+                className="w-full h-full object-cover"
+                alt="AR illustration 2"
+              />
+            </div>
+          </div>
         </div>
       </div>
       {/* Descreption Section End */}
@@ -413,6 +447,9 @@ export default function Home() {
           </div>
         </p>
         <p className="md:text-[4svh] text-[2.4svh] text-center">
+          <b>IDR 169.000</b> untuk satu box berisi <b>3 muffin dan aksesoris</b>
+          .
+          <br />
           Jadi, siapa yang mau kamu kirimin muffin hari ini?
         </p>
         <div className="w-full relative flex justify-center items-center mt-[5svh]">
@@ -421,7 +458,7 @@ export default function Home() {
             alt="icon"
             className="md:h-[6svh] h-[4svh] mr-[1svh]"
           />
-          <Link href={"/create-order"}>
+          <Link href={"/order"}>
             <button className="bg-[#92ED00] md:px-[4svh] px-[6svw] py-[1.5svh] rounded-full md:text-[4svh] text-[2.4svh] font-medium text-[#046511]">
               Pesan Sekarang!
             </button>
@@ -470,7 +507,11 @@ export default function Home() {
             Made with love by
           </p>
 
-          <img src="/assets/icons/c-plus-logo.svg" className="w-38" alt="icon" />
+          <img
+            src="/assets/icons/c-plus-logo.svg"
+            className="w-38"
+            alt="icon"
+          />
         </div>
       </div>
       {/* Footer End */}

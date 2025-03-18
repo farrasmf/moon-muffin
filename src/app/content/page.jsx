@@ -1,4 +1,4 @@
-import InputOrderID from "@/components/InputOrderId";
+import InputOrderID from "@/components/InputOrderID";
 
 export default function LoginPage() {
   return (
