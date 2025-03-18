@@ -1,74 +1,54 @@
-import axios from "axios";
+"use server";
 
-const XENDIT_SECRET_KEY =
-  "xnd_development_asCYzHIFKes96vBg0aMCh6gLooDHK9ByhAJTd2ddxeAwc04NWmzBEchx7olWRo";
-const XENDIT_BUSINESS_ID = "6715e27ff21862e24d0bb8fd";
+import axios from "axios";
 
 const xenditApi = axios.create({
   baseURL: "https://api.xendit.co",
   headers: {
-    Authorization: `Basic ${Buffer.from(XENDIT_SECRET_KEY + ":").toString(
-      "base64"
-    )}`,
+    Authorization: `Basic ${Buffer.from(
+      process.env.NEXT_PUBLIC_XENDIT_SECRET_KEY + ":"
+    ).toString("base64")}`,
     "Content-Type": "application/json",
+    "api-version": "2022-07-31",
   },
 });
 
 export async function createPaymentRequest({ amount, orderId, customerInfo }) {
   try {
-    // Log the request payload for debugging
-    const payload = {
-      amount: amount,
+    // Calculate expiration time (24 hours from now)
+    const expiresAt = new Date();
+    expiresAt.setHours(expiresAt.getHours() + 24);
+
+    const response = await xenditApi.post("/qr_codes", {
+      reference_id: orderId,
+      type: "DYNAMIC",
       currency: "IDR",
-      payment_method: {
-        type: "QR_CODE",
-        reusability: "ONE_TIME_USE",
-        qr_code: {
-          channel_properties: {
-            expires_at: new Date(
-              Date.now() + 24 * 60 * 60 * 1000
-            ).toISOString(), // 24 hours from now
-          },
-        },
-      },
-      description: "Moon Muffin Order Payment",
-      metadata: {
-        orderId: orderId,
-      },
-      customer_details: {
-        email: customerInfo.email,
-        phone_number: customerInfo.whatsapp,
-        given_names: customerInfo.name,
-      },
-    };
-    console.log("Request payload:", JSON.stringify(payload, null, 2));
-
-    const response = await xenditApi.post("/payment_requests", payload);
-
-    // Log the full response
-    console.log("Xendit Payment Request Response:", {
-      status: response.status,
-      statusText: response.statusText,
-      data: response.data,
-      headers: response.headers,
+      amount: amount,
+      expires_at: expiresAt.toISOString(),
     });
 
     return {
       success: true,
-      data: response.data,
+      data: {
+        id: response.data.id,
+        reference_id: response.data.reference_id,
+        amount: response.data.amount,
+        status: response.data.status,
+        qr_string: response.data.qr_string,
+        expires_at: response.data.expires_at,
+        channel_code: response.data.channel_code,
+      },
     };
   } catch (error) {
-    // Enhanced error logging
-    console.error("Error creating Xendit payment request:");
-    console.error("Status:", error.response?.status);
-    console.error("Status Text:", error.response?.statusText);
-    console.error("Response Data:", error.response?.data);
-    console.error("Error Message:", error.message);
-
+    console.error(
+      "Error creating payment request:",
+      error.response?.data || error
+    );
     return {
       success: false,
-      error: error.response?.data?.message || error.message,
-      details: error.response?.data || null,
+      error:
+        error.response?.data?.message || "Failed to create payment request",
+      details: error.response?.data || error,
     };
   }
 }

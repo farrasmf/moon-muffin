@@ -11,7 +11,8 @@ const xenditApi = axios.create({
     Authorization: `Basic ${Buffer.from(
       process.env.NEXT_PUBLIC_XENDIT_SECRET_KEY + ":"
     ).toString("base64")}`,
-    "Content-Type": "application/x-www-form-urlencoded",
+    "Content-Type": "application/json",
+    "api-version": "2022-07-31",
   },
 });
 
@@ -24,7 +25,7 @@ export default function PaymentPage() {
   useEffect(() => {
     async function fetchPaymentDetails() {
       try {
-        const response = await xenditApi.get(`/payment_requests/${params.id}`);
+        const response = await xenditApi.get(`/qr_codes/${params.id}`);
         console.log("Payment details response:", response.data);
         setPaymentDetails(response.data);
       } catch (error) {
@@ -94,7 +95,9 @@ export default function PaymentPage() {
               className={`font-medium ${
                 paymentDetails.status === "PAID"
                   ? "text-green-700"
-                  : "text-yellow-600"
+                  : paymentDetails.status === "ACTIVE"
+                  ? "text-yellow-600"
+                  : "text-red-600"
               }`}
             >
               {paymentDetails.status}
@@ -103,18 +106,14 @@ export default function PaymentPage() {
           <div className="flex justify-between">
             <span className="text-gray-600">Expires At</span>
             <span className="font-medium text-green-700">
-              {new Date(
-                paymentDetails.payment_method.qr_code.channel_properties.expires_at
-              ).toLocaleString()}
+              {new Date(paymentDetails.expires_at).toLocaleString()}
             </span>
           </div>
         </div>
 
         <div className="bg-white p-4 rounded-lg flex justify-center items-center w-full mb-8">
           <QRCodeSVG
-            value={
-              paymentDetails.payment_method.qr_code.channel_properties.qr_string
-            }
+            value={paymentDetails.qr_string}
             size={240}
             level="H"
             includeMargin={true}
